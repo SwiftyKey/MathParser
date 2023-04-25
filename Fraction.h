@@ -132,11 +132,14 @@ Fraction::Fraction(const string &str) {
     // Если точка есть
     if (index != string::npos) {
         // Получаем целую часть числа (находится до точки)
-        long long integral = stoll(str.substr(0, index));
+        string integral = str.substr(0, index);
+        if (integral.empty()) integral = "0";
         // Получаем дробную часть числа (находится после точки)
         string decimal = str.substr(index + 1);
-        numerator = stoll(decimal);
+        if (decimal.empty()) decimal = "0";
         // Получаем числитель
+        numerator = stoll(decimal);
+        // Получаем знаменатель
         denominator = (long long) pow(10, decimal.size());
 
         // Находим наибольший общий делитель числителя и знаменателя
@@ -147,7 +150,7 @@ Fraction::Fraction(const string &str) {
         denominator /= gcd;
 
         // Прибавляем оставшуюся целую часть
-        numerator += integral * denominator;
+        numerator += stoll(integral) * denominator;
         // Если точки нет, то есть переданное число является целым
     } else {
         // Получаем числитель
@@ -267,7 +270,7 @@ Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
     }
 
     if (isBaseNegative && !IsEven(exponentNumerator) && IsEven(exponentDenominator))
-        throw runtime_error("Ошибка. Извлечение четного корня из отрицательного числа");
+        throw runtime_error("Ошибка вычисления. Извлечение четного корня из отрицательного числа");
 
     // возводим числитель основания степени в дробную степень, где числитель - возведение степени, а знаменатель - извлечение корня
     Fraction firstFraction(pow(pow(baseNumerator, exponentNumerator), 1 / (long double) exponentDenominator));
