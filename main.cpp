@@ -90,6 +90,8 @@ void tests() {
     test("sqrt(2)-1/2*sin(1^2-2)", 1.83495);
     test("1/0", 0);
     test("1(e2)", 100);
+    test("ctg(4)", 0.863691);
+    test("arcctg(4)", 0.244979);
 }
 
 void input() {
