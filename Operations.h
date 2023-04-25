@@ -1,8 +1,8 @@
-#ifndef MATHPARSER_OPERATIONS_H
-#define MATHPARSER_OPERATIONS_H
+#ifndef OPERATIONS_H
+#define OPERATIONS_H
 
-#pragma once
-
+#include <string>
+#include <cmath>
 #include <map>
 #include <functional>
 
@@ -10,10 +10,24 @@
 
 using namespace std;
 
+/**
+ * Класс операций
+ * Реализует шаблон проектирования - Singleton
+ */
 class Operations {
 private:
+
+    /**
+     * Дружественный класс Expression
+     * Expression имеет доступ к скрытым переменным-членам класса Operations без геттеров и сеттеров
+     */
     friend class Expression;
 
+    /**
+     * Словарь бинарных операций
+     * Ключ - имя операции типа string
+     * Значение - лямбда-выражение от двух переменных типа Fraction
+     */
     map<string, function<Fraction(const Fraction &, const Fraction &)>> binaryOperations = {
             {"+", [](const Fraction &a, const Fraction &b) { return a + b; }},
             {"-", [](const Fraction &a, const Fraction &b) { return a - b; }},
@@ -23,6 +37,11 @@ private:
             {"e", [](const Fraction &a, const Fraction &b) { return a * Fraction::Power(Fraction(10.0), b); }}
     };
 
+    /**
+     * Словарь унарных операций
+     * Ключ - имя операции типа string
+     * Значение - лямбда-выражение от одной переменной типа Fraction
+     */
     map<string, function<Fraction(const Fraction &)>> unaryOperations = {
             {"+",      [](const Fraction &a) { return a; }},
             {"-",      [](const Fraction &a) { return -a; }},
@@ -46,6 +65,11 @@ private:
             {"sqrt",   [](const Fraction &a) { return Fraction::Power(a, Fraction(0.5)); }}
     };
 
+    /**
+     * Словарь приоритетов бинарных операций
+     * Ключ - имя операции типа string
+     * Значение - приоритет операции типа int
+     */
     map<string, int> binaryOperationsPriority = {
             {"+", 1},
             {"-", 1},
@@ -55,33 +79,53 @@ private:
             {"e", 3}
     };
 
-    Operations() {};
+    Operations() {}; // Закрытый конструктор по умолчанию
 
-    Operations(const Operations &);
+    Operations(const Operations &); // Закрытый копирующий конструктор
 
-    const Operations &operator=(const Operations &);
+    const Operations &operator=(const Operations &); // Закрытое присваивание
 
 public:
+
+    /**
+     * Статическая функция-член
+     * Возвращает один единственный доступный экземпляр класс Operations
+     */
     static Operations &GetInstance() {
+        /**
+         * Статическая переменная для гарантии наличия только одного экземпляра класса Operations
+         */
         static Operations onlyInstance;
         return onlyInstance;
     }
 
+    /**
+     * Функция-член для добавления бинарной операции
+     */
     void AddBinaryOperation(const string &name,
                             const function<Fraction(const Fraction &, const Fraction &)> &func, int priority = 3) {
-        if (IsBinaryOperation(name)) SendError(6);
+        if (IsBinaryOperation(name)) throw runtime_error("Такая операция уже есть");
         binaryOperations[name] = func;
         binaryOperationsPriority[name] = priority;
     }
 
+    /**
+     * Функция-член для добавления унарной операции
+     */
     void AddUnaryOperation(const string &name, const function<Fraction(const Fraction &)> &func) {
-        if (IsUnaryOperation(name)) SendError(6);
+        if (IsUnaryOperation(name)) throw runtime_error("Такая операция уже есть");
         unaryOperations[name] = func;
     }
 
+    /**
+     * Функция-член для проверки того, является ли операция бинарной
+     */
     bool IsBinaryOperation(const string &name) { return (binaryOperations.find(name) != binaryOperations.end()); }
 
+    /**
+     * Функция-член для проверки того, является ли операция унарной
+     */
     bool IsUnaryOperation(const string &name) { return (unaryOperations.find(name) != unaryOperations.end()); }
 };
 
-#endif //MATHPARSER_OPERATIONS_H
+#endif //OPERATIONS_H
