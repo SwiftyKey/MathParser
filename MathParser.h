@@ -58,7 +58,7 @@ private:
     /**
      * Введенное математическое выражение в виде обратной польской нотации
      */
-    vector <Token> postfixNotationExpression;
+    vector<Token> postfixNotationExpression;
 
     /**
      * Функция-член для установки типа операции
@@ -185,7 +185,7 @@ Expression::Token Expression::GetToken() {
 }
 
 void Expression::BuildPostfixNotation() {
-    stack <Token> tokens;
+    stack<Token> tokens;
 
     while (index < expression.size()) {
         Token token = GetToken();
@@ -210,10 +210,10 @@ void Expression::BuildPostfixNotation() {
 
             case binaryOperation:
                 // Пока на вершине стека унарная операция или бинарная с большим или равным приоритетом, добавляем токен в обратную нотацию
-                while (!tokens.empty() && (tokens.top().type == binaryOperation &&
-                                           operations.binaryOperationsPriority[token.name] <=
-                                           operations.binaryOperationsPriority[tokens.top().name] ||
-                                           tokens.top().type == unaryOperation)) {
+                while (!tokens.empty() &&
+                       (tokens.top().type == binaryOperation || tokens.top().type == unaryOperation) &&
+                       operations.operationsPriority[token.name] <=
+                       operations.operationsPriority[tokens.top().name]) {
                     postfixNotationExpression.push_back(tokens.top());
                     tokens.pop();
                 }
@@ -222,7 +222,9 @@ void Expression::BuildPostfixNotation() {
 
             case unaryOperation:
                 // Пока на вершине стека унарная операция, добавляем токен в обратную нотацию
-                while (!tokens.empty() && tokens.top().type == unaryOperation) {
+                while (!tokens.empty() && tokens.top().type == unaryOperation &&
+                       operations.operationsPriority[token.name] <=
+                       operations.operationsPriority[tokens.top().name]) {
                     postfixNotationExpression.push_back(tokens.top());
                     tokens.pop();
                 }
@@ -241,7 +243,7 @@ void Expression::BuildPostfixNotation() {
 }
 
 Fraction Expression::Eval() {
-    stack <Fraction> numbers;
+    stack<Fraction> numbers;
     Fraction a, b, x;
 
     BuildPostfixNotation();

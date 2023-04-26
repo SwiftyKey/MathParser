@@ -70,13 +70,31 @@ private:
      * Ключ - имя операции типа string
      * Значение - приоритет операции типа int
      */
-    map<string, int> binaryOperationsPriority = {
-            {"+", 1},
-            {"-", 1},
-            {"*", 2},
-            {"/", 2},
-            {"^", 3},
-            {"e", 3}
+    map<string, int> operationsPriority = {
+            {"+",      1},
+            {"-",      1},
+            {"*",      2},
+            {"/",      2},
+            {"^",      3},
+            {"e",      3},
+            {"sin",    3},
+            {"cos",    3},
+            {"tg",     3},
+            {"tan",    3},
+            {"ctg",    3},
+            {"arcsin", 3},
+            {"arccos", 3},
+            {"arctg",  3},
+            {"arctan", 3},
+            {"arcctg", 3},
+            {"asin",   3},
+            {"acos",   3},
+            {"atg",    3},
+            {"atan",   3},
+            {"actg",   3},
+            {"abs",    3},
+            {"int",    3},
+            {"sqrt",   3}
     };
 
     Operations() {}; // Закрытый конструктор по умолчанию
@@ -106,15 +124,16 @@ public:
                             const function<Fraction(const Fraction &, const Fraction &)> &func, int priority = 3) {
         if (IsBinaryOperation(name)) throw runtime_error("Такая операция уже есть");
         binaryOperations[name] = func;
-        binaryOperationsPriority[name] = priority;
+        operationsPriority[name] = priority;
     }
 
     /**
      * Функция-член для добавления унарной операции
      */
-    void AddUnaryOperation(const string &name, const function<Fraction(const Fraction &)> &func) {
+    void AddUnaryOperation(const string &name, const function<Fraction(const Fraction &)> &func, int priority = 3) {
         if (IsUnaryOperation(name)) throw runtime_error("Такая операция уже есть");
         unaryOperations[name] = func;
+        operationsPriority[name] = priority;
     }
 
     /**
