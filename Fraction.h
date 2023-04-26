@@ -70,6 +70,11 @@ public:
     long double ConvertFractionToDouble() const;
 
     /**
+     * Функция-член для перевода десятичной дроби в обыкновенную
+     */
+    void ConvertDoubleToFraction(const long double &number);
+
+    /**
      * Перегрузка операторов
      */
 
@@ -106,25 +111,7 @@ Fraction::Fraction() {
     denominator = 1;
 }
 
-Fraction::Fraction(const long double &number) {
-    if (!isfinite(number)) throw runtime_error("Ошибка вычисления. Проверьте выражение");
-
-    auto integral = (long long) number; // целая часть числа
-    long double decimal = number - integral; // дробная часть числа
-
-    const long long precision = 1000000000; // точность, также изначально является знаменателем
-
-    // Округляем дробную часть числа до точности precision, также изначально является числителем без учета целой части
-    auto roundedDecimal = (long long) round(decimal * precision);
-
-    // Находим наибольший общий делитель числителя и знаменателя
-    long long gcd = GCD(roundedDecimal, precision);
-
-    // Сокращаем знаменатель насколько возможно
-    denominator = precision / gcd;
-    // Сокращаем числитель насколько возможно и прибавляем оставшуюся целую часть
-    numerator = roundedDecimal / gcd + integral * denominator;
-}
+Fraction::Fraction(const long double &number) { ConvertDoubleToFraction(number);}
 
 Fraction::Fraction(const string &str) {
     size_t index = str.find('.');
@@ -163,9 +150,13 @@ long long Fraction::GetNumerator() const { return numerator; }
 
 long long Fraction::GetDenominator() const { return denominator; }
 
-void Fraction::SetNumerator(const long long &number) { numerator = number; }
+void Fraction::SetNumerator(const long long &number) {
+    numerator = number;
+}
 
-void Fraction::SetDenominator(const long long &number) { denominator = number; }
+void Fraction::SetDenominator(const long long &number) {
+    denominator = number;
+}
 
 void Fraction::TurnOver() {
     // Для того чтобы получить перевернутую дробь, нужно поменять числитель и знаменатель местами
@@ -173,6 +164,26 @@ void Fraction::TurnOver() {
 }
 
 long double Fraction::ConvertFractionToDouble() const { return (long double) numerator / denominator; }
+
+void Fraction::ConvertDoubleToFraction(const long double &number) {
+    if (!isfinite(number)) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+
+    const long long precision = 1000000000; // точность, также изначально является знаменателем
+
+    auto integral = (long long) number; // целая часть числа
+    long double decimal = number - integral; // дробная часть числа
+
+    // Округляем дробную часть числа до точности precision, также изначально является числителем без учета целой части
+    auto roundedDecimal = (long long) round(decimal * precision);
+
+    // Находим наибольший общий делитель числителя и знаменателя
+    long long gcd = GCD(roundedDecimal, precision);
+
+    // Сокращаем знаменатель насколько возможно
+    denominator = precision / gcd;
+    // Сокращаем числитель насколько возможно и прибавляем оставшуюся целую часть
+    numerator = roundedDecimal / gcd + integral * denominator;
+}
 
 Fraction::operator long double() const { return ConvertFractionToDouble(); }
 
@@ -285,6 +296,8 @@ Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
 
     // Если показатель степени отрицательный, то переворачиваем получившуюся дробь
     if (isExponentNegative) result.TurnOver();
+
+    result.ConvertDoubleToFraction((long double)result);
 
     return result;
 }
