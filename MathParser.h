@@ -58,7 +58,7 @@ private:
     /**
      * Введенное математическое выражение в виде обратной польской нотации
      */
-    vector<Token> postfixNotationExpression;
+    vector <Token> postfixNotationExpression;
 
     /**
      * Функция-член для установки типа операции
@@ -168,10 +168,10 @@ Expression::Token Expression::GetToken() {
             } else tokenName += expression[index++];
         }
         token.type = number;
-    // Если встречаем букву, получаем полностью слово
+        // Если встречаем букву, получаем полностью слово
     } else if (IsLetter(index))
-        while (index < expression.size() && IsLetter(index)) tokenName += (char)tolower(expression[index++]);
-    // Иначе получаем символ
+        while (index < expression.size() && IsLetter(index)) tokenName += (char) tolower(expression[index++]);
+        // Иначе получаем символ
     else tokenName += expression[index++];
 
     // Устанавливаем тип операции
@@ -185,7 +185,7 @@ Expression::Token Expression::GetToken() {
 }
 
 void Expression::BuildPostfixNotation() {
-    stack<Token> tokens;
+    stack <Token> tokens;
 
     while (index < expression.size()) {
         Token token = GetToken();
@@ -241,7 +241,7 @@ void Expression::BuildPostfixNotation() {
 }
 
 Fraction Expression::Eval() {
-    stack<Fraction> numbers;
+    stack <Fraction> numbers;
     Fraction a, b, x;
 
     BuildPostfixNotation();
