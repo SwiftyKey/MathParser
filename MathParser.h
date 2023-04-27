@@ -119,7 +119,7 @@ private:
 
 public:
     explicit MathExpression(const string &expr) {
-        if (expr.empty()) throw runtime_error("Пустое выражение");
+        if (expr.empty()) throw runtime_error("Ошибка. Пустое выражение");
         expression = expr;
         expression.erase(remove(expression.begin(), expression.end(), ' '), expression.end());
     }
@@ -160,7 +160,7 @@ MathExpression::TypeOfTokens MathExpression::GetType(size_t position, const stri
 
     if (operations.IsFunction(name)) {
         if (expression[position] == '(') type = func;
-        else throw runtime_error("После функции ожидается '('");
+        else throw runtime_error("Ошибка. После функции ожидается '('");
     }
         // Если операция является и бинарной, и унарной
     else if (operations.IsUnaryOperation(name) && operations.IsBinaryOperation(name)) {
@@ -180,7 +180,7 @@ MathExpression::Token MathExpression::GetToken() {
     string tokenName;
     Token token;
 
-    if (!IsBracketSequenceCorrect()) throw runtime_error("Некорректная скобочная последовательность");
+    if (!IsBracketSequenceCorrect()) throw runtime_error("Ошибка. Некорректная скобочная последовательность");
 
     // Если встречаем цифру, получаем полностью число
     while (index < expression.size() && (IsDigit(index) || IsPoint(index)))
@@ -199,7 +199,7 @@ MathExpression::Token MathExpression::GetToken() {
     // Устанавливаем тип операции
     if (token.type == unknown) token.type = GetType(index, tokenName);
 
-    if (tokenName.empty()) throw runtime_error("Непредвиденный символ");
+    if (tokenName.empty()) throw runtime_error("Ошибка. Непредвиденный символ");
     token.name = tokenName;
 
     return token;
@@ -213,7 +213,7 @@ void MathExpression::BuildPostfixNotation() {
 
         switch (token.type) {
             case unknown:
-                throw runtime_error("Такой операции нет");
+                throw runtime_error("Ошибка. Такой операции нет");
 
             case number:
                 postfixNotationExpression.push_back(token);

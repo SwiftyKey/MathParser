@@ -3,18 +3,17 @@
 
 #include <string>
 #include <cmath>
+#include <limits>
 
 using namespace std;
-
-/*
- * TODO: обработать переполнение
- */
 
 /**
  * Класс обыкновенных дробей
  */
 class Fraction {
 private:
+
+    const long long precision = 1000000000; // точность, также изначально является знаменателем
 
     /**
      * Поле класса Fraction
@@ -95,9 +94,15 @@ public:
 
     /**
      * Функция-член класса Fraction
-     * ConvertDoubleToFraction - переводит десятичную дробь в обыкновенную
+     * ConvertDoubleToFraction - переводит дробное число в обыкновенную дробь
      */
     void ConvertDoubleToFraction(const long double &number);
+
+    /**
+     * Функция-член класса Fraction
+     * ConvertStringToFraction - переводит дробное число записанное в строке в обыкновенную дробь
+     */
+    void ConvertStringToFraction(const string &str);
 
     /**
      * Перегрузка операторов
@@ -151,38 +156,8 @@ Fraction::Fraction() {
 
 Fraction::Fraction(const long double &number) { ConvertDoubleToFraction(number); }
 
-Fraction::Fraction(const string &str) {
-    size_t index = str.find('.');
+Fraction::Fraction(const string &str) { ConvertStringToFraction(str); }
 
-    // Если точка есть
-    if (index != string::npos) {
-        // Получаем целую часть числа (находится до точки)
-        string integral = str.substr(0, index);
-        if (integral.empty()) integral = "0";
-        // Получаем дробную часть числа (находится после точки)
-        string decimal = str.substr(index + 1);
-        if (decimal.empty()) decimal = "0";
-        // Получаем числитель
-        numerator = stoll(decimal);
-        // Получаем знаменатель
-        denominator = (long long) pow(10, decimal.size());
-
-        // Находим наибольший общий делитель числителя и знаменателя
-        long long gcd = GCD(numerator, denominator);
-        // Сокращаем знаменатель насколько возможно
-        numerator /= gcd;
-        // Сокращаем числитель насколько возможно
-        denominator /= gcd;
-
-        // Прибавляем оставшуюся целую часть
-        numerator += stoll(integral) * denominator;
-        // Если точки нет, то есть переданное число является целым
-    } else {
-        // Получаем числитель
-        numerator = stoll(str);
-        denominator = 1;
-    }
-}
 
 long long Fraction::GetNumerator() const { return numerator; }
 
@@ -206,7 +181,7 @@ long double Fraction::ConvertFractionToDouble() const { return (long double) num
 void Fraction::ConvertDoubleToFraction(const long double &number) {
     if (!isfinite(number)) throw runtime_error("Ошибка вычисления. Проверьте выражение");
 
-    const long long precision = 1000000000; // точность, также изначально является знаменателем
+    if (number > numeric_limits<long long>::max()) throw runtime_error("Ошибка. Слишком большое число");
 
     auto integral = (long long) number; // целая часть числа
     long double decimal = number - integral; // дробная часть числа
@@ -221,6 +196,43 @@ void Fraction::ConvertDoubleToFraction(const long double &number) {
     denominator = precision / gcd;
     // Сокращаем числитель насколько возможно и прибавляем оставшуюся целую часть
     numerator = roundedDecimal / gcd + integral * denominator;
+}
+
+void Fraction::ConvertStringToFraction(const string &str) {
+    size_t index = str.find('.');
+
+    try {
+        // Если точка есть
+        if (index != string::npos) {
+            // Получаем целую часть числа (находится до точки)
+            string integral = str.substr(0, index);
+            if (integral.empty()) integral = "0";
+            // Получаем дробную часть числа (находится после точки)
+            string decimal = str.substr(index + 1, (short) log10(precision));
+            if (decimal.empty()) decimal = "0";
+            // Получаем числитель
+            numerator = stoll(decimal);
+            // Получаем знаменатель
+            denominator = (long long) pow(10, decimal.size());
+
+            // Находим наибольший общий делитель числителя и знаменателя
+            long long gcd = GCD(numerator, denominator);
+            // Сокращаем знаменатель насколько возможно
+            numerator /= gcd;
+            // Сокращаем числитель насколько возможно
+            denominator /= gcd;
+
+            // Прибавляем оставшуюся целую часть
+            numerator += stoll(integral) * denominator;
+            // Если точки нет, то есть переданное число является целым
+        } else {
+            // Получаем числитель
+            numerator = stoll(str);
+            denominator = 1;
+        }
+    } catch (out_of_range& error) {
+        throw runtime_error("Ошибка. Слишком большое число");
+    }
 }
 
 Fraction::operator long double() const { return ConvertFractionToDouble(); }
