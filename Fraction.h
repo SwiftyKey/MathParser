@@ -18,24 +18,24 @@ private:
 
     /**
      * Поле класса Fraction
-     * numerator - числитель дроби
+     * numerator - хранит числитель дроби
      */
     long long numerator;
     /**
      * Поле класса Fraction
-     * denominator - знаменатель дроби
+     * denominator - хранит знаменатель дроби
      */
     long long denominator;
 
     /**
-     * Функция-член класса Fraction
+     * Закрытая функция-член класса Fraction
      * GCD - возвращает наибольший общий делитель
      * Применяется алгоритм Евклида
      */
     static long long GCD(long long a, long long b);
 
     /**
-     * Функция-член класса Fraction
+     * Закрытая функция-член класса Fraction
      * IsEven - возвращает true, если число четное, иначе - false
      */
     static bool IsEven(const long long &a) { return (a % 2 == 0); }
@@ -119,7 +119,7 @@ public:
 
     /**
      * Функция-член класса Fraction
-     * Power - возводит дробь в дробную степень
+     * Power - возводит дробь в дробную степень и возвращает полученную дробь
      */
     static Fraction Power(const Fraction &a, const Fraction &b);
 };
@@ -137,7 +137,7 @@ Fraction::Fraction() {
     denominator = 1;
 }
 
-Fraction::Fraction(const long double &number) { ConvertDoubleToFraction(number);}
+Fraction::Fraction(const long double &number) { ConvertDoubleToFraction(number); }
 
 Fraction::Fraction(const string &str) {
     size_t index = str.find('.');
@@ -323,7 +323,7 @@ Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
     // Если показатель степени отрицательный, то переворачиваем получившуюся дробь
     if (isExponentNegative) result.TurnOver();
 
-    result.ConvertDoubleToFraction((long double)result);
+    result.ConvertDoubleToFraction((long double) result);
 
     return result;
 }

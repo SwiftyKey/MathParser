@@ -23,79 +23,97 @@ class Expression {
 private:
 
     /**
-     * Получаем экземпляр класса Operations
+     * Поле класса Expression
+     * operations - хранит экземпляр класса Operations
      */
     Operations &operations = Operations::GetInstance();
     /**
-     * Строка математического выражения
+     * Поле класса Expression
+     * expression - хранит введенное математическое выражение
      */
     string expression;
     /**
-     * Текущий индекс в строке
+     * Поле класса Expression
+     * index - хранит текущий индекс в строке expression
      */
     size_t index = 0;
 
     /**
-     * Перечисление типов токенов
+     * Поле класса Expression
+     * TypeOfTokens - перечисление типов токенов
      */
     enum TypeOfTokens {
         unknown, number, openBracket, closeBracket, binaryOperation, unaryOperation
     };
 
     /**
-     * Структура токена
+     * Поле класса Expression
+     * Token - структура токена
      */
     struct Token {
 
         /**
-         * Имя токена
+         * Поле структуры Token
+         * name - хранит имя токена
          */
         string name;
         /**
-         * Тип токена
+         * Поле структуры Token
+         * type - хранит тип токена
          */
         TypeOfTokens type;
 
+        /**
+         * Конструктор по умолчанию структуры Token
+         */
         Token() : type(unknown) {}
     };
 
     /**
-     * Введенное математическое выражение в виде обратной польской нотации
+     * Поле класса Expression
+     * postfixNotationExpression - хранит expression в виде обратной польской нотации
      */
     vector<Token> postfixNotationExpression;
 
     /**
-     * Функция-член для установки типа операции
+     * Закрытая функция-член класса Expression
+     * GetOperationType - возвращает тип операции
      */
-    TypeOfTokens SetOperationType(size_t position, const string &name);
+    TypeOfTokens GetOperationType(size_t position, const string &name);
 
     /**
+     * Закрытая функция-член класса Expression
      * Функция-член для получения следующего токена
      */
     Token GetToken();
 
     /**
+     * Закрытая функция-член класса Expression
      * Функция-член для построения обратной польской нотации
      */
     void BuildPostfixNotation();
 
     /**
-     * Функция-член для проверки, что символ является цифрой
+     * Закрытая функция-член класса Expression
+     * IsDigit - возвращает true, если символ является цифрой, иначе - false
      */
     bool IsDigit(const size_t &position);
 
     /**
-     * Функция-член для проверки, что символ является точкой (запятой)
+     * Закрытая функция-член класса Expression
+     * IsPoint - возвращает true, если символ является точкой, иначе - false
      */
     bool IsPoint(const size_t &position);
 
     /**
-     * Функция-член для проверки, что символ является буквой
+     * Закрытая функция-член класса Expression
+     * IsLetter - возвращает true, если символ является буквой, иначе - false
      */
     bool IsLetter(const size_t &position);
 
     /**
-     * Функция-член для проверки корректности скобочной последовательности
+     * Закрытая функция-член класса Expression
+     * IsBracketSequenceCorrect - возвращает true, если скобочная последовательность корректна, иначе - false
      */
     bool IsBracketSequenceCorrect();
 
@@ -110,16 +128,15 @@ public:
     }
 
     /**
-     * Функция-член для вычисления значения математического выражения
+     * Функция-член класса Expression
+     * Eval - возвращает вычисленное значение математического выражения
      */
     Fraction Eval();
 };
 
 bool Expression::IsDigit(const size_t &position) { return isdigit(expression[position]); }
 
-bool Expression::IsPoint(const size_t &position) {
-    return (expression[position] == '.' || expression[position] == ',');
-}
+bool Expression::IsPoint(const size_t &position) { return expression[position] == '.'; }
 
 bool Expression::IsLetter(const size_t &position) { return isalpha(expression[position]); }
 
@@ -135,10 +152,10 @@ bool Expression::IsBracketSequenceCorrect() {
         if (count < 0) return false;
     }
 
-    return (count == 0);
+    return count == 0;
 }
 
-Expression::TypeOfTokens Expression::SetOperationType(size_t position, const string &name) {
+Expression::TypeOfTokens Expression::GetOperationType(size_t position, const string &name) {
     TypeOfTokens type = unknown;
 
 
@@ -179,7 +196,7 @@ Expression::Token Expression::GetToken() {
     else tokenName += expression[index++];
 
     // Устанавливаем тип операции
-    if (token.type == unknown) token.type = SetOperationType(index, tokenName);
+    if (token.type == unknown) token.type = GetOperationType(index, tokenName);
     if (token.type == unknown) throw runtime_error("Такой операции нет");
 
     if (tokenName.empty()) throw runtime_error("Непредвиденный символ");
