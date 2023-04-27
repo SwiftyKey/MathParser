@@ -19,27 +19,27 @@ using namespace std;
  * Класс математических выражений
  * Все операции проводятся над переменными типа Fraction
  */
-class Expression {
+class MathExpression {
 private:
 
     /**
-     * Поле класса Expression
+     * Поле класса MathExpression
      * operations - хранит экземпляр класса Operations
      */
     Operations &operations = Operations::GetInstance();
     /**
-     * Поле класса Expression
+     * Поле класса MathExpression
      * expression - хранит введенное математическое выражение
      */
     string expression;
     /**
-     * Поле класса Expression
+     * Поле класса MathExpression
      * index - хранит текущий индекс в строке expression
      */
     size_t index = 0;
 
     /**
-     * Поле класса Expression
+     * Поле класса MathExpression
      * TypeOfTokens - перечисление типов токенов
      */
     enum TypeOfTokens {
@@ -47,7 +47,7 @@ private:
     };
 
     /**
-     * Поле класса Expression
+     * Поле класса MathExpression
      * Token - структура токена
      */
     struct Token {
@@ -70,56 +70,56 @@ private:
     };
 
     /**
-     * Поле класса Expression
+     * Поле класса MathExpression
      * postfixNotationExpression - хранит expression в виде обратной польской нотации
      */
     vector<Token> postfixNotationExpression;
 
     /**
-     * Закрытая функция-член класса Expression
+     * Закрытая функция-член класса MathExpression
      * GetOperationType - возвращает тип операции
      */
     TypeOfTokens GetOperationType(size_t position, const string &name);
 
     /**
-     * Закрытая функция-член класса Expression
+     * Закрытая функция-член класса MathExpression
      * Функция-член для получения следующего токена
      */
     Token GetToken();
 
     /**
-     * Закрытая функция-член класса Expression
+     * Закрытая функция-член класса MathExpression
      * Функция-член для построения обратной польской нотации
      */
     void BuildPostfixNotation();
 
     /**
-     * Закрытая функция-член класса Expression
+     * Закрытая функция-член класса MathExpression
      * IsDigit - возвращает true, если символ является цифрой, иначе - false
      */
     bool IsDigit(const size_t &position);
 
     /**
-     * Закрытая функция-член класса Expression
+     * Закрытая функция-член класса MathExpression
      * IsPoint - возвращает true, если символ является точкой, иначе - false
      */
     bool IsPoint(const size_t &position);
 
     /**
-     * Закрытая функция-член класса Expression
+     * Закрытая функция-член класса MathExpression
      * IsLetter - возвращает true, если символ является буквой, иначе - false
      */
     bool IsLetter(const size_t &position);
 
     /**
-     * Закрытая функция-член класса Expression
+     * Закрытая функция-член класса MathExpression
      * IsBracketSequenceCorrect - возвращает true, если скобочная последовательность корректна, иначе - false
      */
     bool IsBracketSequenceCorrect();
 
 
 public:
-    explicit Expression(const string &expr) {
+    explicit MathExpression(const string &expr) {
         if (expr.empty()) throw runtime_error("Пустое выражение");
         expression = expr;
         // убираем пробельные символы
@@ -128,19 +128,19 @@ public:
     }
 
     /**
-     * Функция-член класса Expression
+     * Функция-член класса MathExpression
      * Eval - возвращает вычисленное значение математического выражения
      */
     Fraction Eval();
 };
 
-bool Expression::IsDigit(const size_t &position) { return isdigit(expression[position]); }
+bool MathExpression::IsDigit(const size_t &position) { return isdigit(expression[position]); }
 
-bool Expression::IsPoint(const size_t &position) { return expression[position] == '.'; }
+bool MathExpression::IsPoint(const size_t &position) { return expression[position] == '.'; }
 
-bool Expression::IsLetter(const size_t &position) { return isalpha(expression[position]); }
+bool MathExpression::IsLetter(const size_t &position) { return isalpha(expression[position]); }
 
-bool Expression::IsBracketSequenceCorrect() {
+bool MathExpression::IsBracketSequenceCorrect() {
     // если count = 0, то открывающих и закрывающих скобок одинаковое количество
     int count = 0;
 
@@ -155,7 +155,7 @@ bool Expression::IsBracketSequenceCorrect() {
     return count == 0;
 }
 
-Expression::TypeOfTokens Expression::GetOperationType(size_t position, const string &name) {
+MathExpression::TypeOfTokens MathExpression::GetOperationType(size_t position, const string &name) {
     TypeOfTokens type = unknown;
 
 
@@ -173,7 +173,7 @@ Expression::TypeOfTokens Expression::GetOperationType(size_t position, const str
     return type;
 }
 
-Expression::Token Expression::GetToken() {
+MathExpression::Token MathExpression::GetToken() {
     string tokenName;
     Token token;
 
@@ -205,7 +205,7 @@ Expression::Token Expression::GetToken() {
     return token;
 }
 
-void Expression::BuildPostfixNotation() {
+void MathExpression::BuildPostfixNotation() {
     stack<Token> tokens;
 
     while (index < expression.size()) {
@@ -263,7 +263,7 @@ void Expression::BuildPostfixNotation() {
     }
 }
 
-Fraction Expression::Eval() {
+Fraction MathExpression::Eval() {
     stack<Fraction> numbers;
     Fraction a, b, x;
 

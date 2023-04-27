@@ -22,10 +22,10 @@ class Operations {
 private:
 
     /**
-     * Дружественный класс Expression
+     * Дружественный класс MathExpression
      * Expression имеет доступ к скрытым полям класса Operations без геттеров и сеттеров
      */
-    friend class Expression;
+    friend class MathExpression;
 
     /**
      * Поле класса Operations

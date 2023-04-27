@@ -7,7 +7,7 @@ int errors = 0;
 
 void test(const string &input, long double expected) {
     try {
-        Expression expression(input);
+        MathExpression expression(input);
         Fraction result = expression.Eval();
         cout << input << " = " << expected << " : , got " << (long double) result << endl;
     } catch (exception &e) {
@@ -120,7 +120,7 @@ void input() {
         if (input == "end") break;
 
         try {
-            Expression expression(input);
+            MathExpression expression(input);
             Fraction result = expression.Eval();
             cout << "Ответ: " << (long double) result << endl;
         } catch (exception &e) {
