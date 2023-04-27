@@ -2,6 +2,7 @@
 #define OPERATIONS_H
 
 #include <string>
+#include <vector>
 #include <cmath>
 #include <map>
 #include <functional>
@@ -9,10 +10,6 @@
 #include "Fraction.h"
 
 using namespace std;
-
-/*
- * TODO: добавить тип: функция
- */
 
 /**
  * Класс операций
@@ -51,35 +48,74 @@ private:
      * Очередность операций: слева направо
      */
     map<string, function<Fraction(const Fraction &)>> unaryOperations = {
-            {"+",      [](const Fraction &a) { return a; }},
-            {"-",      [](const Fraction &a) { return -a; }},
-            {"sin",    [](const Fraction &a) { return Fraction(sin((long double) a)); }},
-            {"cos",    [](const Fraction &a) { return Fraction(cos((long double) a)); }},
-            {"tg",     [](const Fraction &a) { return Fraction(tan((long double) a)); }},
-            {"tan",    [](const Fraction &a) { return Fraction(tan((long double) a)); }},
-            {"ctg",    [](const Fraction &a) { return Fraction(cos((long double) a) / sin((long double) a)); }},
-            {"arcsin", [](const Fraction &a) { return Fraction(asin((long double) a)); }},
-            {"arccos", [](const Fraction &a) { return Fraction(acos((long double) a)); }},
-            {"arctg",  [](const Fraction &a) { return Fraction(atan((long double) a)); }},
-            {"arctan", [](const Fraction &a) { return Fraction(atan((long double) a)); }},
-            {"arcctg", [](const Fraction &a) { return Fraction(M_PI_2 - atan((long double) a)); }},
-            {"asin",   [](const Fraction &a) { return Fraction(asin((long double) a)); }},
-            {"acos",   [](const Fraction &a) { return Fraction(acos((long double) a)); }},
-            {"atg",    [](const Fraction &a) { return Fraction(atan((long double) a)); }},
-            {"atan",   [](const Fraction &a) { return Fraction(atan((long double) a)); }},
-            {"actg",   [](const Fraction &a) { return Fraction(M_PI_2 - atan((long double) a)); }},
-            {"abs",    [](const Fraction &a) { return Fraction(abs((long double) a)); }},
-            {"int",    [](const Fraction &a) { return Fraction(floor((long double) a)); }},
-            {"sqrt",   [](const Fraction &a) { return Fraction::Power(a, Fraction(0.5)); }}
+            {"+", [](const Fraction &a) { return a; }},
+            {"-", [](const Fraction &a) { return -a; }}
     };
 
     /**
      * Поле класса Operations
-     * operationsPriority - хранит словарь приоритетов для операций и функций:
-     *  Ключ - имя операции типа string
+     * functions - хранит словарь функций:
+     *  Ключ - имя функции типа string
+     *  Значение - лямбда-выражение от одной и более переменной типа Fraction
+     * Очередность функций: слева направо
+     */
+    map<string, function<Fraction(const vector<Fraction> &)>> functions{
+            {"sin",    [](const vector<Fraction> &a) { return Fraction(sin((long double) a[0])); }},
+            {"cos",    [](const vector<Fraction> &a) { return Fraction(cos((long double) a[0])); }},
+            {"tg",     [](const vector<Fraction> &a) { return Fraction(tan((long double) a[0])); }},
+            {"tan",    [](const vector<Fraction> &a) { return Fraction(tan((long double) a[0])); }},
+            {"ctg",    [](const vector<Fraction> &a) {
+                return Fraction(cos((long double) a[0]) / sin((long double) a[0]));
+            }},
+            {"arcsin", [](const vector<Fraction> &a) { return Fraction(asin((long double) a[0])); }},
+            {"arccos", [](const vector<Fraction> &a) { return Fraction(acos((long double) a[0])); }},
+            {"arctg",  [](const vector<Fraction> &a) { return Fraction(atan((long double) a[0])); }},
+            {"arctan", [](const vector<Fraction> &a) { return Fraction(atan((long double) a[0])); }},
+            {"arcctg", [](const vector<Fraction> &a) { return Fraction(M_PI_2 - atan((long double) a[0])); }},
+            {"asin",   [](const vector<Fraction> &a) { return Fraction(asin((long double) a[0])); }},
+            {"acos",   [](const vector<Fraction> &a) { return Fraction(acos((long double) a[0])); }},
+            {"atg",    [](const vector<Fraction> &a) { return Fraction(atan((long double) a[0])); }},
+            {"atan",   [](const vector<Fraction> &a) { return Fraction(atan((long double) a[0])); }},
+            {"actg",   [](const vector<Fraction> &a) { return Fraction(M_PI_2 - atan((long double) a[0])); }},
+            {"abs",    [](const vector<Fraction> &a) { return Fraction(abs((long double) a[0])); }},
+            {"int",    [](const vector<Fraction> &a) { return Fraction(floor((long double) a[0])); }},
+            {"sqrt",   [](const vector<Fraction> &a) { return Fraction::Power(a[0], Fraction(0.5)); }}
+    };
+
+    /**
+     * Поле класса Operations
+     * numberOfFunctionArguments - хранит словарь количества аргументов функций:
+     *  Ключ - имя функции типа string
+     *  Значение - количество аргументов типа int
+     */
+    map<string, int> numberOfFunctionArguments{
+            {"sin",    1},
+            {"cos",    1},
+            {"tg",     1},
+            {"tan",    1},
+            {"ctg",    1},
+            {"arcsin", 1},
+            {"arccos", 1},
+            {"arctg",  1},
+            {"arctan", 1},
+            {"arcctg", 1},
+            {"asin",   1},
+            {"acos",   1},
+            {"atg",    1},
+            {"atan",   1},
+            {"actg",   1},
+            {"abs",    1},
+            {"int",    1},
+            {"sqrt",   1}
+    };
+
+    /**
+     * Поле класса Operations
+     * priorities - хранит словарь приоритетов для операций и функций:
+     *  Ключ - имя операции/функции типа string
      *  Значение - приоритет операции типа int
      */
-    map<string, int> operationsPriority = {
+    map<string, int> priorities = {
             {"+",      1},
             {"-",      1},
             {"*",      2},
@@ -141,7 +177,7 @@ public:
                             const function<Fraction(const Fraction &, const Fraction &)> &func, int priority = 3) {
         if (IsBinaryOperation(name)) throw runtime_error("Такая операция уже есть");
         binaryOperations[name] = func;
-        operationsPriority[name] = priority;
+        priorities[name] = priority;
     }
 
     /**
@@ -151,7 +187,21 @@ public:
     void AddUnaryOperation(const string &name, const function<Fraction(const Fraction &)> &func, int priority = 3) {
         if (IsUnaryOperation(name)) throw runtime_error("Такая операция уже есть");
         unaryOperations[name] = func;
-        operationsPriority[name] = priority;
+        priorities[name] = priority;
+    }
+
+    /**
+     * Функция-член класса Operations
+     * AddFunction - добавляет функцию
+     */
+    void AddFunction(const string &name, const function<Fraction(const vector<Fraction> &)> &func, int priority = 3,
+                     int numberOfArguments = 1) {
+        if (IsFunction(name)) throw runtime_error("Такая функция уже есть");
+        if (IsUnaryOperation(name) || IsBinaryOperation(name))
+            throw runtime_error("Нельзя задавать имя функции такое же, как у операций");
+        functions[name] = func;
+        priorities[name] = priority;
+        numberOfFunctionArguments[name] = numberOfArguments;
     }
 
     /**
@@ -165,6 +215,12 @@ public:
      * IsUnaryOperation - проверяет, является ли операция унарной
      */
     bool IsUnaryOperation(const string &name) { return (unaryOperations.find(name) != unaryOperations.end()); }
+
+    /**
+     * Функция-член класса Operations
+     * IsFunction - проверяет, является ли переданный аргумент функцией
+     */
+    bool IsFunction(const string &name) { return (functions.find(name) != functions.end()); }
 };
 
 #endif //OPERATIONS_H

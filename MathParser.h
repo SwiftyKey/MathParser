@@ -11,7 +11,6 @@
 using namespace std;
 
 /*
- * TODO: добавить разделительную запятую
  * TODO: скомпилировать библиотеку (в объектный файл)
  */
 
@@ -43,7 +42,7 @@ private:
      * TypeOfTokens - перечисление типов токенов
      */
     enum TypeOfTokens {
-        unknown, number, openBracket, closeBracket, binaryOperation, unaryOperation
+        unknown, number, comma, openBracket, closeBracket, binaryOperation, unaryOperation, func
     };
 
     /**
@@ -77,9 +76,9 @@ private:
 
     /**
      * Закрытая функция-член класса MathExpression
-     * GetOperationType - возвращает тип операции
+     * GetType - возвращает тип операции
      */
-    TypeOfTokens GetOperationType(size_t position, const string &name);
+    TypeOfTokens GetType(size_t position, const string &name);
 
     /**
      * Закрытая функция-член класса MathExpression
@@ -122,9 +121,7 @@ public:
     explicit MathExpression(const string &expr) {
         if (expr.empty()) throw runtime_error("Пустое выражение");
         expression = expr;
-        // убираем пробельные символы
         expression.erase(remove(expression.begin(), expression.end(), ' '), expression.end());
-
     }
 
     /**
@@ -141,26 +138,32 @@ bool MathExpression::IsPoint(const size_t &position) { return expression[positio
 bool MathExpression::IsLetter(const size_t &position) { return isalpha(expression[position]); }
 
 bool MathExpression::IsBracketSequenceCorrect() {
-    // если count = 0, то открывающих и закрывающих скобок одинаковое количество
+    // переменная для подсчета открывающих и закрывающих скобок
     int count = 0;
 
     for (char &iter: expression) {
-        // подсчет скобок
+        // каждая открывающая скобка увеличивает счетчик
         if (iter == '(') count++;
+            // каждая закрывающая скобка уменьшает счетчик
         else if (iter == ')') count--;
 
+        // если количество станет меньше нуля, значит скобки расставлены неправильно
         if (count < 0) return false;
     }
 
+    // если count = 0, то открывающих и закрывающих скобок одинаковое количество
     return count == 0;
 }
 
-MathExpression::TypeOfTokens MathExpression::GetOperationType(size_t position, const string &name) {
+MathExpression::TypeOfTokens MathExpression::GetType(size_t position, const string &name) {
     TypeOfTokens type = unknown;
 
-
-    // Если операция является и бинарной, и унарной
-    if (operations.IsUnaryOperation(name) && operations.IsBinaryOperation(name)) {
+    if (operations.IsFunction(name)) {
+        if (expression[position] == '(') type = func;
+        else throw runtime_error("После функции ожидается '('");
+    }
+        // Если операция является и бинарной, и унарной
+    else if (operations.IsUnaryOperation(name) && operations.IsBinaryOperation(name)) {
         // Получаем позицию символа перед операцией, -1 - означает, что операция находится в начале строки
         position -= name.size() + 1;
         type = ((position != -1 && (IsDigit(position) || IsPoint(position) || expression[position] == ')'))
@@ -180,24 +183,21 @@ MathExpression::Token MathExpression::GetToken() {
     if (!IsBracketSequenceCorrect()) throw runtime_error("Некорректная скобочная последовательность");
 
     // Если встречаем цифру, получаем полностью число
-    if (IsDigit(index) || IsPoint(index)) {
-        while (index < expression.size() && (IsDigit(index) || IsPoint(index))) {
-            // Так как разделитель между дробной и целой части числа может быть '.' и ',', заменяем на точку
-            if (IsPoint(index)) {
-                tokenName += '.';
-                index++;
-            } else tokenName += expression[index++];
-        }
+    while (index < expression.size() && (IsDigit(index) || IsPoint(index)))
+        tokenName += expression[index++];
+    if (!tokenName.empty())
         token.type = number;
         // Если встречаем букву, получаем полностью слово
-    } else if (IsLetter(index))
-        while (index < expression.size() && IsLetter(index)) tokenName += (char) tolower(expression[index++]);
+    else if (IsLetter(index))
+        while (index < expression.size() && IsLetter(index))
+            tokenName += (char) tolower(expression[index++]);
         // Иначе получаем символ
     else tokenName += expression[index++];
 
+    if (tokenName == ",") token.type = comma;
+
     // Устанавливаем тип операции
-    if (token.type == unknown) token.type = GetOperationType(index, tokenName);
-    if (token.type == unknown) throw runtime_error("Такой операции нет");
+    if (token.type == unknown) token.type = GetType(index, tokenName);
 
     if (tokenName.empty()) throw runtime_error("Непредвиденный символ");
     token.name = tokenName;
@@ -212,6 +212,9 @@ void MathExpression::BuildPostfixNotation() {
         Token token = GetToken();
 
         switch (token.type) {
+            case unknown:
+                throw runtime_error("Такой операции нет");
+
             case number:
                 postfixNotationExpression.push_back(token);
                 break;
@@ -232,9 +235,9 @@ void MathExpression::BuildPostfixNotation() {
             case binaryOperation:
                 // Пока на вершине стека унарная операция или бинарная с большим или равным приоритетом, добавляем токен в обратную нотацию
                 while (!tokens.empty() &&
-                       (tokens.top().type == binaryOperation || tokens.top().type == unaryOperation) &&
-                       operations.operationsPriority[token.name] <=
-                       operations.operationsPriority[tokens.top().name]) {
+                       ((tokens.top().type == binaryOperation || tokens.top().type == unaryOperation) &&
+                        operations.priorities[token.name] <=
+                        operations.priorities[tokens.top().name] || tokens.top().type == func)) {
                     postfixNotationExpression.push_back(tokens.top());
                     tokens.pop();
                 }
@@ -242,13 +245,7 @@ void MathExpression::BuildPostfixNotation() {
                 break;
 
             case unaryOperation:
-                // Пока на вершине стека унарная операция, добавляем токен в обратную нотацию
-                while (!tokens.empty() && tokens.top().type == unaryOperation &&
-                       operations.operationsPriority[token.name] <=
-                       operations.operationsPriority[tokens.top().name]) {
-                    postfixNotationExpression.push_back(tokens.top());
-                    tokens.pop();
-                }
+            case func:
                 tokens.push(token);
                 break;
         }
@@ -274,6 +271,7 @@ Fraction MathExpression::Eval() {
             case number:
                 numbers.push(Fraction(iter.name));
                 break;
+
             case unaryOperation:
                 if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
 
@@ -282,6 +280,7 @@ Fraction MathExpression::Eval() {
 
                 numbers.push(operations.unaryOperations[iter.name](x));
                 break;
+
             case binaryOperation:
                 if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
 
@@ -292,6 +291,21 @@ Fraction MathExpression::Eval() {
                 numbers.pop();
 
                 numbers.push(operations.binaryOperations[iter.name](a, b));
+                break;
+
+            case func:
+                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+
+                // получаем аргументы функции
+                vector<Fraction> args;
+                for (int i = 0; i < operations.numberOfFunctionArguments[iter.name]; i++) {
+                    args.push_back(numbers.top());
+                    numbers.pop();
+                }
+                // так как числа расположены по правилам обратной польской нотации, то перевернем args
+                reverse(args.begin(), args.end());
+
+                numbers.push(operations.functions[iter.name](args));
                 break;
         }
     }
