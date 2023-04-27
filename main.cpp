@@ -138,7 +138,7 @@ int main() {
 
     Operations &operations = Operations::GetInstance();
     operations.AddFunction("min",
-                           [](const vector<Fraction> &a){return Fraction(min((long double)Fraction(a[0]), (long double)Fraction(a[1])));},
+                           [](const vector<Fraction> &a){return Fraction(min(Fraction(a[0]), Fraction(a[1])));},
                            3, 2);
     tests();
     cout << "Done with " << errors << " errors." << endl;

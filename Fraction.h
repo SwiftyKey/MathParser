@@ -117,6 +117,18 @@ public:
 
     Fraction &operator=(const Fraction &fraction);
 
+    bool operator<(const Fraction &fraction) const;
+
+    bool operator<=(const Fraction &fraction) const;
+
+    bool operator>(const Fraction &fraction) const;
+
+    bool operator>=(const Fraction &fraction) const;
+
+    bool operator==(const Fraction &fraction) const;
+
+    bool operator!=(const Fraction &fraction) const;
+
     /**
      * Функция-член класса Fraction
      * Power - возводит дробь в дробную степень и возвращает полученную дробь
@@ -281,6 +293,30 @@ Fraction &Fraction::operator=(const Fraction &fraction) {
         this->denominator = fraction.GetDenominator();
     }
     return *this;
+}
+
+bool Fraction::operator<(const Fraction &fraction) const {
+    return (numerator * fraction.GetDenominator()) < (fraction.GetNumerator() * denominator);
+}
+
+bool Fraction::operator<=(const Fraction &fraction) const {
+    return (numerator * fraction.GetDenominator()) <= (fraction.GetNumerator() * denominator);
+}
+
+bool Fraction::operator>(const Fraction &fraction) const {
+    return (numerator * fraction.GetDenominator()) > (fraction.GetNumerator() * denominator);
+}
+
+bool Fraction::operator>=(const Fraction &fraction) const {
+    return (numerator * fraction.GetDenominator()) >= (fraction.GetNumerator() * denominator);
+}
+
+bool Fraction::operator==(const Fraction &fraction) const {
+    return (numerator * fraction.GetDenominator()) == (fraction.GetNumerator() * denominator);
+}
+
+bool Fraction::operator!=(const Fraction &fraction) const {
+    return (numerator * fraction.GetDenominator()) != (fraction.GetNumerator() * denominator);
 }
 
 Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
