@@ -13,7 +13,11 @@ using namespace std;
 class Fraction {
 private:
 
-    const long long precision = 1000000000; // точность, также изначально является знаменателем
+    /**
+     * Поле класса Fraction
+     * precision - хранит точность
+     */
+    const long long precision = 1000000000;
 
     /**
      * Поле класса Fraction
