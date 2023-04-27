@@ -10,6 +10,10 @@
 
 using namespace std;
 
+/*
+ * TODO: добавить тип: функция
+ */
+
 /**
  * Класс операций
  * Реализует шаблон проектирования - Singleton
@@ -19,14 +23,16 @@ private:
 
     /**
      * Дружественный класс Expression
-     * Expression имеет доступ к скрытым переменным-членам класса Operations без геттеров и сеттеров
+     * Expression имеет доступ к скрытым полям класса Operations без геттеров и сеттеров
      */
     friend class Expression;
 
     /**
-     * Словарь бинарных операций
-     * Ключ - имя операции типа string
-     * Значение - лямбда-выражение от двух переменных типа Fraction
+     * Поле класса Operations
+     * binaryOperations - словарь бинарных операций:
+     *  Ключ - имя операции типа string
+     *  Значение - лямбда-выражение от двух переменных типа Fraction
+     * Очередность операций: слева направо
      */
     map<string, function<Fraction(const Fraction &, const Fraction &)>> binaryOperations = {
             {"+", [](const Fraction &a, const Fraction &b) { return a + b; }},
@@ -38,9 +44,11 @@ private:
     };
 
     /**
-     * Словарь унарных операций
-     * Ключ - имя операции типа string
-     * Значение - лямбда-выражение от одной переменной типа Fraction
+     * Поле класса Operations
+     * unaryOperations - словарь унарных операций:
+     *  Ключ - имя операции типа string
+     *  Значение - лямбда-выражение от одной переменной типа Fraction
+     * Очередность операций: слева направо
      */
     map<string, function<Fraction(const Fraction &)>> unaryOperations = {
             {"+",      [](const Fraction &a) { return a; }},
@@ -66,9 +74,10 @@ private:
     };
 
     /**
-     * Словарь приоритетов бинарных операций
-     * Ключ - имя операции типа string
-     * Значение - приоритет операции типа int
+     * Поле класса Operations
+     * operationsPriority - словарь приоритетов для операций и функций:
+     *  Ключ - имя операции типа string
+     *  Значение - приоритет операции типа int
      */
     map<string, int> operationsPriority = {
             {"+",      1},
@@ -97,28 +106,36 @@ private:
             {"sqrt",   3}
     };
 
-    Operations() {}; // Закрытый конструктор по умолчанию
+    /**
+     * Закрытый конструктор по умолчанию класса Operations
+     */
+    Operations() {};
 
-    Operations(const Operations &); // Закрытый копирующий конструктор
+    /**
+     * Закрытый копирующий конструктор класса Operations
+     */
+    Operations(const Operations &);
 
-    const Operations &operator=(const Operations &); // Закрытое присваивание
+    /**
+     * Закрытое присваивание класса Operations
+     */
+    const Operations &operator=(const Operations &);
 
 public:
 
     /**
-     * Статическая функция-член
-     * Возвращает один единственный доступный экземпляр класс Operations
+     * Статическая функция-член класса Operations
+     * GetInstance - возвращает один единственный доступный экземпляр класс Operations
      */
     static Operations &GetInstance() {
-        /**
-         * Статическая переменная для гарантии наличия только одного экземпляра класса Operations
-         */
+        // onlyInstance - статическая переменная для гарантии наличия только одного экземпляра класса Operations
         static Operations onlyInstance;
         return onlyInstance;
     }
 
     /**
-     * Функция-член для добавления бинарной операции
+     * Функция-член класса Operations
+     * AddBinaryOperation - добавляет бинарную операцию
      */
     void AddBinaryOperation(const string &name,
                             const function<Fraction(const Fraction &, const Fraction &)> &func, int priority = 3) {
@@ -128,7 +145,8 @@ public:
     }
 
     /**
-     * Функция-член для добавления унарной операции
+     * Функция-член класса Operations
+     * AddUnaryOperation - добавляет унарную операцию
      */
     void AddUnaryOperation(const string &name, const function<Fraction(const Fraction &)> &func, int priority = 3) {
         if (IsUnaryOperation(name)) throw runtime_error("Такая операция уже есть");
@@ -137,12 +155,14 @@ public:
     }
 
     /**
-     * Функция-член для проверки того, является ли операция бинарной
+     * Функция-член класса Operations
+     * IsBinaryOperation - проверяет, является ли операция бинарной
      */
     bool IsBinaryOperation(const string &name) { return (binaryOperations.find(name) != binaryOperations.end()); }
 
     /**
-     * Функция-член для проверки того, является ли операция унарной
+     * Функция-член класса Operations
+     * IsUnaryOperation - проверяет, является ли операция унарной
      */
     bool IsUnaryOperation(const string &name) { return (unaryOperations.find(name) != unaryOperations.end()); }
 };

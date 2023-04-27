@@ -6,6 +6,10 @@
 
 using namespace std;
 
+/*
+ * TODO: обработать переполнение
+ */
+
 /**
  * Класс обыкновенных дробей
  */
@@ -13,64 +17,85 @@ class Fraction {
 private:
 
     /**
-     * numerator - числитель
-     * denominator - знаменатель
+     * Поле класса Fraction
+     * numerator - числитель дроби
      */
-    long long numerator, denominator;
+    long long numerator;
+    /**
+     * Поле класса Fraction
+     * denominator - знаменатель дроби
+     */
+    long long denominator;
 
     /**
-     * Функция-член для нахождения наибольшего общего делителя через Алгоритм Евклида
+     * Функция-член класса Fraction
+     * GCD - возвращает наибольший общий делитель
+     * Применяется алгоритм Евклида
      */
     static long long GCD(long long a, long long b);
 
     /**
-     * Функция-член для проверки числа на четность
+     * Функция-член класса Fraction
+     * IsEven - возвращает true, если число четное, иначе - false
      */
     static bool IsEven(const long long &a) { return (a % 2 == 0); }
 
 public:
 
     /**
-     * Конструкторы
+     * Конструктор по умолчанию класса Fraction
      */
     explicit Fraction();
 
+    /**
+     * Конструктор с числовым аргументом класса Fraction
+     */
     explicit Fraction(const long double &number);
 
+    /**
+     * Конструктор с числовым аргументом класса Fraction
+     */
     explicit Fraction(const string &str);
 
     /**
-     * Геттер для числителя
+     * Функция-член класса Fraction
+     * GetNumerator - возвращает числитель дроби
      */
     long long GetNumerator() const;
 
     /**
-     * Геттер для знаменателя
+     * Функция-член класса Fraction
+     * GetDenominator - возвращает знаменатель дроби
      */
     long long GetDenominator() const;
 
     /**
-     * Сеттер для числителя
+     * Функция-член класса Fraction
+     * SetNumerator - изменяет числитель дроби
      */
     void SetNumerator(const long long &number);
 
     /**
-     * Сеттер для знаменателя
+     * Функция-член класса Fraction
+     * SetDenominator - изменяет знаменатель дроби
      */
     void SetDenominator(const long long &number);
 
     /**
-     * Функция-член для переворота дроби
+     * Функция-член класса Fraction
+     * TurnOver - переворачивает дробь (числитель и знаменатель меняются местами)
      */
     void TurnOver();
 
     /**
-     * Функция-член для перевода обыкновенной дроби в десятичную
+     * Функция-член класса Fraction
+     * ConvertFractionToDouble - переводит обыкновенную дробь в десятичную
      */
     long double ConvertFractionToDouble() const;
 
     /**
-     * Функция-член для перевода десятичной дроби в обыкновенную
+     * Функция-член класса Fraction
+     * ConvertDoubleToFraction - переводит десятичную дробь в обыкновенную
      */
     void ConvertDoubleToFraction(const long double &number);
 
@@ -93,7 +118,8 @@ public:
     Fraction &operator=(const Fraction &fraction);
 
     /**
-     * Функция-член для возведения дроби в дробную степень
+     * Функция-член класса Fraction
+     * Power - возводит дробь в дробную степень
      */
     static Fraction Power(const Fraction &a, const Fraction &b);
 };
