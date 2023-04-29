@@ -3,4 +3,4 @@ project(MathParser)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(MathParser main.cpp MathParser.h Operations.h Fraction.h)
+add_library(MathParser MathParser.cpp)
