@@ -15,7 +15,7 @@ private:
 
     /**
      * Поле класса Fraction
-     * precision - хранит точность
+     * precision - хранит точность (степень 10)
      */
     const long long precision = 1000000000;
 
@@ -298,7 +298,7 @@ Fraction Fraction::operator/(const Fraction &fraction) const {
     result.SetNumerator(numerator * fraction.GetDenominator());
     result.SetDenominator(denominator * fraction.GetNumerator());
 
-    if (!isfinite((long double) result)) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+    if (!isfinite((long double) result)) throw runtime_error("Ошибка вычисления. Деление на ноль");
 
     return result;
 }

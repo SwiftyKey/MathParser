@@ -120,8 +120,10 @@ private:
 public:
     explicit MathExpression(const string &expr) {
         if (expr.empty()) throw runtime_error("Ошибка. Пустое выражение");
+
         expression = expr;
-        expression.erase(remove(expression.begin(), expression.end(), ' '), expression.end());
+
+        if (!IsBracketSequenceCorrect()) throw runtime_error("Ошибка. Некорректная скобочная последовательность");
     }
 
     /**
@@ -159,6 +161,7 @@ MathExpression::TypeOfTokens MathExpression::GetTokenType(size_t position, const
     TypeOfTokens type = unknown;
 
     if (operations.IsFunction(name)) {
+        while (position < expression.size() && isspace(expression[position])) position++;
         if (expression[position] == '(') type = func;
         else throw runtime_error("Ошибка. После имени функции ожидается '('");
     }
@@ -166,6 +169,7 @@ MathExpression::TypeOfTokens MathExpression::GetTokenType(size_t position, const
     else if (operations.IsUnaryOperation(name) && operations.IsBinaryOperation(name)) {
         // Получаем позицию символа перед операцией, -1 - означает, что операция находится в начале строки
         position -= name.size() + 1;
+        while (position > 0 && isspace(expression[position])) position--;
         type = ((position != -1 && (IsDigit(position) || IsPoint(position) || expression[position] == ')'))
                 ? binaryOperation : unaryOperation);
     } else if (operations.IsUnaryOperation(name)) type = unaryOperation;
@@ -180,7 +184,8 @@ MathExpression::Token MathExpression::GetToken() {
     string tokenName;
     Token token;
 
-    if (!IsBracketSequenceCorrect()) throw runtime_error("Ошибка. Некорректная скобочная последовательность");
+    while (index < expression.size() && isspace(expression[index]))
+        index++;
 
     // Если встречаем цифру, получаем полностью число
     while (index < expression.size() && (IsDigit(index) || IsPoint(index)))
@@ -192,14 +197,14 @@ MathExpression::Token MathExpression::GetToken() {
         while (index < expression.size() && IsLetter(index))
             tokenName += (char) tolower(expression[index++]);
         // Иначе получаем символ
-    else tokenName += expression[index++];
+    else if (index < expression.size()) tokenName += expression[index++];
 
     if (tokenName == ",") token.type = comma;
 
     // Устанавливаем тип операции
     if (token.type == unknown) token.type = GetTokenType(index, tokenName);
 
-    if (tokenName.empty()) throw runtime_error("Ошибка. Непредвиденный символ");
+    if (index < expression.size() && tokenName.empty()) throw runtime_error("Ошибка. Непредвиденный символ");
     token.name = tokenName;
 
     return token;
@@ -213,15 +218,12 @@ void MathExpression::BuildPostfixNotation() {
 
         switch (token.type) {
             case unknown:
+                if (index == expression.size()) break;
                 throw runtime_error("Ошибка. Такой операции нет");
 
             case comma:
             case number:
                 postfixNotationExpression.push_back(token);
-                break;
-
-            case openBracket:
-                tokens.push(token);
                 break;
 
             case closeBracket:
@@ -249,9 +251,7 @@ void MathExpression::BuildPostfixNotation() {
                     postfixNotationExpression.push_back(tokens.top());
                     tokens.pop();
                 }
-                tokens.push(token);
-                break;
-
+            case openBracket:
             case unaryOperation:
             case func:
                 tokens.push(token);
@@ -278,7 +278,7 @@ Fraction MathExpression::Eval() {
     for (const auto &iter: postfixNotationExpression) {
         switch (iter.type) {
             case comma:
-                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+                if (numbers.empty()) throw runtime_error("Ошибка. Ожидается операнд");
 
                 args.push_back(numbers.top());
                 numbers.pop();
@@ -289,7 +289,7 @@ Fraction MathExpression::Eval() {
                 break;
 
             case unaryOperation:
-                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Пропущен операнд");
 
                 x = numbers.top();
                 numbers.pop();
@@ -298,10 +298,10 @@ Fraction MathExpression::Eval() {
                 break;
 
             case binaryOperation:
-                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
-
                 b = numbers.top();
                 numbers.pop();
+
+                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Пропущен операнд");
 
                 a = numbers.top();
                 numbers.pop();
@@ -319,6 +319,8 @@ Fraction MathExpression::Eval() {
                 break;
         }
     }
+
+    if (numbers.size() > 1) throw runtime_error("Ошибка вычисления. Пропущен оператор или функция");
 
     return numbers.top();
 }

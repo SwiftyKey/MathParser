@@ -9,7 +9,7 @@ void test(const string &input, long double expected) {
     try {
         MathExpression expression(input);
         Fraction result = expression.Eval();
-        cout << input << " = " << expected << " : , got " << (long double) result << endl;
+        cout << input << " = " << expected << " : got " << (long double) result << endl;
     } catch (exception &e) {
         cout << input << " : exception: " << e.what() << endl;
         ++errors;
@@ -23,6 +23,7 @@ void tests() {
     test("10", 10);
     test("+1", 1);
     test("-1", -1);
+    test("      -1", -1);
     test("(1)", 1);
     test("(-1)", -1);
     test("-(-1)", 1);
@@ -37,6 +38,7 @@ void tests() {
     test("(1+20)", 21);
     test("-2*3", -6);
     test("2*(-3)", -6);
+    test("2*-3", -6);
     test("1+10*2", 21);
     test("10*2+1", 21);
     test("(1+20)*2", 42);
@@ -57,7 +59,6 @@ void tests() {
     test("-3 + .3", -2.7);
     test("sin(4+3)", 0.656987);
     test("sin(3+4)", 0.656987);
-    test("asin(3+4)", 0);
     test("3.21e2", 321);
     test("1+3.2e1 - 2 * 5", 23);
     test("3.21e+2", 321);
@@ -75,20 +76,17 @@ void tests() {
     test("int(2.99999999999997) + 34", 36);
     test("sqrt(6.25) + 34", 36.5);
     test("3 + 4 * 2 / ( 1 - 5 ) ^ 2 ^ 3", 3.001953125);
-    test("1 + sqrt(-4) ^ 3", 2);
+    test(" 3 + 5                                             ", 8);
     test("8^(1/2)", 2.82843);
-    test("(-4)^1.5", -1);
     test("8^4", 4096);
     test("0^2", 0);
     test("0^0", 1);
     test("(-8)^4", 4096);
     test("4^(-0.5)", 0.5);
-    test("(-8)^(-1/2)", -1);
     test("4^(-4)", 0.00390625);
     test("(-8)^(-4)", 0.000244141);
     test("(-8)^(1/3)", -2);
     test("sqrt(2)-1/2*sin(1^2-2)", 1.83495);
-    test("1/0", 0);
     test("1(e2)", 100);
     test("ctg(4)", 0.863691);
     test("arcctg(4)", 0.244979);
@@ -109,14 +107,29 @@ void tests() {
     test("min(min(1, 2, 3), min(3, 5, 8 * 20 - 5 ^ 3)) * 10 - 5 / 3", 8.33333);
     test("0.8845875131313131", 0.8845875131313131);
     test("0.8845875131313131 * 0.284881", 0.252002);
+    test("0.999999999 + 0.999999999", 1.999999998);
+    test("min(1, 2, 3 - 5)", -2);
+    test("min(1)", 1);
     test("8888809987242424284282", 0);
     test("0/0", 0);
-    test("min(1, 2, 3 - 5)", -2);
-    test("2 4", 24); // Ошибка
-    test("min(1)", 1);
+    test("1/0", 0);
+    test("2 4", 24);
     test("min(1,)", 1);
     test("min()", 1);
+    test("min(,)", 1);
     test("min 1)", 1);
+    test(",", 1);
+    test("min", 1);
+    test("б + 3", 1);
+    test("3+", 1);
+    test("+", 1);
+    test("(-8)^(-1/2)", -1);
+    test("(-4)^1.5", -1);
+    test("1 + sqrt(-4) ^ 3", 2);
+    test("asin(3+4)", 0);
+    test(" sin                                             ", 8);
+    test(" 4    5                                            ", 9);
+    cout << "Done with " << errors << " errors." << endl;
 }
 
 void input() {
@@ -151,9 +164,7 @@ int main() {
                                for (int i = 1; i < a.size(); i++)
                                    result = min(result, a[i]);
                                return result;
-                           },
-                           3);
-//    tests();
-//    cout << "Done with " << errors << " errors." << endl;
-    input();
+                           });
+    tests();
+//    input();
 }
