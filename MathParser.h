@@ -76,9 +76,9 @@ private:
 
     /**
      * Закрытая функция-член класса MathExpression
-     * GetType - возвращает тип операции
+     * GetTokenType - возвращает тип операции
      */
-    TypeOfTokens GetType(size_t position, const string &name);
+    TypeOfTokens GetTokenType(size_t position, const string &name);
 
     /**
      * Закрытая функция-член класса MathExpression
@@ -155,12 +155,12 @@ bool MathExpression::IsBracketSequenceCorrect() {
     return count == 0;
 }
 
-MathExpression::TypeOfTokens MathExpression::GetType(size_t position, const string &name) {
+MathExpression::TypeOfTokens MathExpression::GetTokenType(size_t position, const string &name) {
     TypeOfTokens type = unknown;
 
     if (operations.IsFunction(name)) {
         if (expression[position] == '(') type = func;
-        else throw runtime_error("Ошибка. После функции ожидается '('");
+        else throw runtime_error("Ошибка. После имени функции ожидается '('");
     }
         // Если операция является и бинарной, и унарной
     else if (operations.IsUnaryOperation(name) && operations.IsBinaryOperation(name)) {
@@ -197,7 +197,7 @@ MathExpression::Token MathExpression::GetToken() {
     if (tokenName == ",") token.type = comma;
 
     // Устанавливаем тип операции
-    if (token.type == unknown) token.type = GetType(index, tokenName);
+    if (token.type == unknown) token.type = GetTokenType(index, tokenName);
 
     if (tokenName.empty()) throw runtime_error("Ошибка. Непредвиденный символ");
     token.name = tokenName;
@@ -215,6 +215,7 @@ void MathExpression::BuildPostfixNotation() {
             case unknown:
                 throw runtime_error("Ошибка. Такой операции нет");
 
+            case comma:
             case number:
                 postfixNotationExpression.push_back(token);
                 break;
@@ -230,14 +231,21 @@ void MathExpression::BuildPostfixNotation() {
                     tokens.pop();
                 }
                 tokens.pop();
+
+                // Когда дошли до открывающей скобки, проверяем на наличие функции перед ней
+                if (!tokens.empty() && tokens.top().type == func) {
+                    postfixNotationExpression.push_back(tokens.top());
+                    tokens.pop();
+                }
+
                 break;
 
             case binaryOperation:
                 // Пока на вершине стека унарная операция или бинарная с большим или равным приоритетом, добавляем токен в обратную нотацию
                 while (!tokens.empty() &&
-                       ((tokens.top().type == binaryOperation || tokens.top().type == unaryOperation) &&
+                       (tokens.top().type == binaryOperation || tokens.top().type == unaryOperation) &&
                         operations.priorities[token.name] <=
-                        operations.priorities[tokens.top().name] || tokens.top().type == func)) {
+                        operations.priorities[tokens.top().name]) {
                     postfixNotationExpression.push_back(tokens.top());
                     tokens.pop();
                 }
@@ -262,12 +270,20 @@ void MathExpression::BuildPostfixNotation() {
 
 Fraction MathExpression::Eval() {
     stack<Fraction> numbers;
+    vector<Fraction> args;
     Fraction a, b, x;
 
     BuildPostfixNotation();
 
-    for (auto &iter: postfixNotationExpression) {
+    for (const auto& iter : postfixNotationExpression) {
         switch (iter.type) {
+            case comma:
+                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+
+                args.push_back(numbers.top());
+                numbers.pop();
+                break;
+
             case number:
                 numbers.push(Fraction(iter.name));
                 break;
@@ -294,18 +310,12 @@ Fraction MathExpression::Eval() {
                 break;
 
             case func:
-                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+                if (numbers.empty()) throw runtime_error("Ошибка. Пропущен аргумент функции");
 
-                // получаем аргументы функции
-                vector<Fraction> args;
-                for (int i = 0; i < operations.numberOfFunctionArguments[iter.name]; i++) {
-                    args.push_back(numbers.top());
-                    numbers.pop();
-                }
-                // так как числа расположены по правилам обратной польской нотации, то перевернем args
-                reverse(args.begin(), args.end());
-
+                args.push_back(numbers.top());
+                numbers.pop();
                 numbers.push(operations.functions[iter.name](args));
+                args.clear();
                 break;
         }
     }

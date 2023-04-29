@@ -194,14 +194,12 @@ public:
      * Функция-член класса Operations
      * AddFunction - добавляет функцию
      */
-    void AddFunction(const string &name, const function<Fraction(const vector<Fraction> &)> &func, int priority = 3,
-                     int numberOfArguments = 1) {
+    void AddFunction(const string &name, const function<Fraction(const vector<Fraction> &)> &func, int priority = 3) {
         if (IsFunction(name)) throw runtime_error("Такая функция уже есть");
         if (IsUnaryOperation(name) || IsBinaryOperation(name))
             throw runtime_error("Нельзя задавать имя функции такое же, как у операций");
         functions[name] = func;
         priorities[name] = priority;
-        numberOfFunctionArguments[name] = numberOfArguments;
     }
 
     /**

@@ -36,7 +36,7 @@ void tests() {
     test("-1+20", 19);
     test("(1+20)", 21);
     test("-2*3", -6);
-    test("2*-3", -6);
+    test("2*(-3)", -6);
     test("1+10*2", 21);
     test("10*2+1", 21);
     test("(1+20)*2", 42);
@@ -106,11 +106,17 @@ void tests() {
     test("sin(cos(abs(-1)))*cos(sin(int(9.34213)))+10", 10.4713);
     test("min(1, 2)", 1);
     test("min(1, 2) * 10 - 5 / 3", 8.33333);
-    test("min(min(1, 2), min(3, 5)) * 10 - 5 / 3", 8.33333);
+    test("min(min(1, 2, 3), min(3, 5, 8 * 20 - 5 ^ 3)) * 10 - 5 / 3", 8.33333);
     test("0.8845875131313131", 0.8845875131313131);
     test("0.8845875131313131 * 0.284881", 0.252002);
     test("8888809987242424284282", 0);
     test("0/0", 0);
+    test("min(1, 2, 3 - 5)", -2);
+    test("2 4", 24); // Ошибка
+    test("min(1)", 1);
+    test("min(1,)", 1);
+    test("min()", 1);
+    test("min 1)", 1);
 }
 
 void input() {
@@ -140,9 +146,14 @@ int main() {
 
     Operations &operations = Operations::GetInstance();
     operations.AddFunction("min",
-                           [](const vector<Fraction> &a){return Fraction(min(Fraction(a[0]), Fraction(a[1])));},
-                           3, 2);
-    tests();
-    cout << "Done with " << errors << " errors." << endl;
-//    input();
+                           [](const vector<Fraction> &a) {
+                               Fraction result(a[0]);
+                               for (int i = 1; i < a.size(); i++)
+                                   result = min(result, a[i]);
+                               return result;
+                           },
+                           3);
+//    tests();
+//    cout << "Done with " << errors << " errors." << endl;
+    input();
 }
