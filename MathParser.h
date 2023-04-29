@@ -244,8 +244,8 @@ void MathExpression::BuildPostfixNotation() {
                 // Пока на вершине стека унарная операция или бинарная с большим или равным приоритетом, добавляем токен в обратную нотацию
                 while (!tokens.empty() &&
                        (tokens.top().type == binaryOperation || tokens.top().type == unaryOperation) &&
-                        operations.priorities[token.name] <=
-                        operations.priorities[tokens.top().name]) {
+                       operations.priorities[token.name] <=
+                       operations.priorities[tokens.top().name]) {
                     postfixNotationExpression.push_back(tokens.top());
                     tokens.pop();
                 }
@@ -275,7 +275,7 @@ Fraction MathExpression::Eval() {
 
     BuildPostfixNotation();
 
-    for (const auto& iter : postfixNotationExpression) {
+    for (const auto &iter: postfixNotationExpression) {
         switch (iter.type) {
             case comma:
                 if (numbers.empty()) throw runtime_error("Ошибка вычисления. Проверьте выражение");
