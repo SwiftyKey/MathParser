@@ -1,0 +1,7 @@
+# ninja log v5
+4	2103	7044761659152452	CMakeFiles/MathParser.dir/main.cpp.obj	23414c89dacaac9f
+2103	2835	7044761666497308	MathParser.exe	b396a26daf793855
+3	1642	7044761181005799	CMakeFiles/MathParser.dir/MathParser.cpp.obj	d00098d8d56af6f1
+0	225	7044779060870452	build.ninja	38a5cfc5ba5a234
+0	1829	7044779447706987	CMakeFiles/MathParser.dir/MathParser.cpp.obj	d00098d8d56af6f1
+1831	2089	7044779450329370	libMathParser.a	17739c24eef9c983
