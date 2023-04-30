@@ -2,8 +2,8 @@
 4	2103	7044761659152452	CMakeFiles/MathParser.dir/main.cpp.obj	23414c89dacaac9f
 3	1660	7045430910482079	CMakeFiles/MathParser.dir/Parser/MathParser.cpp.obj	ea0297e015214a8a
 2103	2835	7044761666497308	MathParser.exe	b396a26daf793855
-1260	1475	7045434816882894	libMathParser.a	17739c24eef9c983
-1	1259	7045434814710922	CMakeFiles/MathParser.dir/MathParser.cpp.obj	d00098d8d56af6f1
-1	196	7045461613222184	build.ninja	38a5cfc5ba5a234
-3	1404	7045461647733387	CMakeFiles/MathParser.dir/MathParser.cpp.obj	d00098d8d56af6f1
 1404	1635	7045461650065507	libMathParser.a	17739c24eef9c983
+3	1404	7045461647733387	CMakeFiles/MathParser.dir/MathParser.cpp.obj	d00098d8d56af6f1
+1	196	7045628823101250	build.ninja	38a5cfc5ba5a234
+3	1290	7045628860301012	CMakeFiles/MathParser.dir/MathParser.cpp.obj	d00098d8d56af6f1
+1290	1518	7045628862613110	libMathParser.a	17739c24eef9c983

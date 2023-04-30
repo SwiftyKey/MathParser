@@ -1,12 +1,11 @@
-#ifndef MATHPARSER_H
-#define MATHPARSER_H
+#pragma once
 
 #include <stack>
 #include <vector>
 #include <string>
 
-#include "Operations.h"
-#include "Fraction.h"
+#include "Operations.hpp"
+#include "Fraction.hpp"
 
 using namespace std;
 
@@ -128,5 +127,3 @@ public:
      */
     Fraction Eval();
 };
-
-#endif //MATHPARSER_H

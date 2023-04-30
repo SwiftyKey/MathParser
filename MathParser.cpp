@@ -1,4 +1,4 @@
-#include "MathParser.h"
+#include "MathParser.hpp"
 
 bool MathExpression::IsDigit(const size_t &position) { return isdigit(expression[position]); }
 

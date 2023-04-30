@@ -1,5 +1,4 @@
-#ifndef OPERATIONS_H
-#define OPERATIONS_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -7,7 +6,7 @@
 #include <map>
 #include <functional>
 
-#include "Fraction.h"
+#include "Fraction.hpp"
 
 using namespace std;
 
@@ -206,5 +205,3 @@ public:
      */
     bool IsFunction(const string &name);
 };
-
-#endif //OPERATIONS_H

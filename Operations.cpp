@@ -1,4 +1,4 @@
-#include "Operations.h"
+#include "Operations.hpp"
 
 Operations &Operations::GetInstance() {
     // onlyInstance - статическая переменная для гарантии наличия только одного экземпляра класса Operations

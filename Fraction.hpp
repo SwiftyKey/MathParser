@@ -1,5 +1,4 @@
-#ifndef FRACTION_H
-#define FRACTION_H
+#pragma once
 
 #include <string>
 #include <cmath>
@@ -144,5 +143,3 @@ public:
      */
     static Fraction Power(const Fraction &a, const Fraction &b);
 };
-
-#endif //FRACTION_H
