@@ -6,3 +6,5 @@
 0	225	7045417126560345	build.ninja	38a5cfc5ba5a234
 1	1198	7045417254328325	CMakeFiles/MathParser.dir/Parser/MathParser.cpp.obj	ea0297e015214a8a
 1201	1413	7045417256500302	libMathParser.a	3518b3f71b1c1875
+3	1660	7045430910482079	CMakeFiles/MathParser.dir/Parser/MathParser.cpp.obj	ea0297e015214a8a
+1660	1906	7045430912944319	libMathParser.a	3518b3f71b1c1875

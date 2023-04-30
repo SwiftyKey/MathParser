@@ -7,7 +7,7 @@
 #include <map>
 #include <functional>
 
-#include "../Fraction/Fraction.h"
+#include "Fraction.h"
 
 using namespace std;
 
@@ -181,8 +181,12 @@ public:
     /**
      * Функция-член класса Operations
      * AddFunction - добавляет функцию
+     * numberOfArguments - количество аргументов, которое принимает функция, если равно 0, то неограниченное количество
      */
-    void AddFunction(const string &name, const function<Fraction(const vector<Fraction> &)> &func, int priority = 3);
+    void AddFunction(const string &name, const function<Fraction(const vector<Fraction> &)> &func, int priority = 3,
+                     int numberOfArguments = 0);
+
+    int GetNumberOfFunctionArguments(const string &name);
 
     /**
      * Функция-член класса Operations

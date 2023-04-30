@@ -147,8 +147,12 @@ Fraction MathExpression::Eval() {
             case comma:
                 if (numbers.empty()) throw runtime_error("Ошибка. Ожидается операнд");
 
-                args.push_back(numbers.top());
-                numbers.pop();
+                if (operations.GetNumberOfFunctionArguments(iter.name) == 0 ||
+                    operations.GetNumberOfFunctionArguments(iter.name) - args.size() > 1) {
+                    args.push_back(numbers.top());
+                    numbers.pop();
+                }
+
                 break;
 
             case number:
