@@ -30,7 +30,7 @@ MathExpression::TypeOfTokens MathExpression::GetTokenType(size_t position, const
     if (operations.IsFunction(name)) {
         while (position < expression.size() && isspace(expression[position])) position++;
         if (expression[position] == '(') type = func;
-        else throw runtime_error("Ошибка. После имени функции ожидается '('");
+        else throw runtime_error("Ошибка. После функции " + name + " ожидается '('");
     }
         // Если операция является и бинарной, и унарной
     else if (operations.IsUnaryOperation(name) && operations.IsBinaryOperation(name)) {
@@ -147,11 +147,8 @@ Fraction MathExpression::Eval() {
             case comma:
                 if (numbers.empty()) throw runtime_error("Ошибка. Ожидается операнд");
 
-                if (operations.GetNumberOfFunctionArguments(iter.name) == 0 ||
-                    operations.GetNumberOfFunctionArguments(iter.name) - args.size() > 1) {
-                    args.push_back(numbers.top());
-                    numbers.pop();
-                }
+                args.push_back(numbers.top());
+                numbers.pop();
 
                 break;
 
@@ -185,6 +182,13 @@ Fraction MathExpression::Eval() {
 
                 args.push_back(numbers.top());
                 numbers.pop();
+
+                int numberOfArguments = operations.GetNumberOfFunctionArguments(iter.name);
+
+                if (numberOfArguments != 0 && args.size() > numberOfArguments)
+                    throw runtime_error("Ошибка вычисления. Функция " + iter.name +
+                                        " принимает количество аргументов = " + to_string(numberOfArguments));
+
                 numbers.push(operations.functions[iter.name](args));
                 args.clear();
                 break;
