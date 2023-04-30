@@ -13,4 +13,5 @@
 * Сообщение об ошибках
 
 > Сама библиотека находится в [cmake-build-debug](https://github.com/SwiftyKey/MathParser/tree/master/cmake-build-debug). Файл libMathParser.a
+
 > Пример использования [MathParserTest](https://github.com/SwiftyKey/MathParserTest)
