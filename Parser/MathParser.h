@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 
-#include "Operations.h"
-#include "Fraction.h"
+#include "../Operations/Operations.h"
+#include "../Fraction/Fraction.h"
 
 using namespace std;
 

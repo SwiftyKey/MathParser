@@ -49,11 +49,11 @@ cmake_ninja_workdir = D$:/Projects/MathParser/cmake-build-debug/
 
 build cmake_object_order_depends_target_MathParser: phony || CMakeFiles/MathParser.dir
 
-build CMakeFiles/MathParser.dir/MathParser.cpp.obj: CXX_COMPILER__MathParser_Debug D$:/Projects/MathParser/MathParser.cpp || cmake_object_order_depends_target_MathParser
-  DEP_FILE = CMakeFiles\MathParser.dir\MathParser.cpp.obj.d
+build CMakeFiles/MathParser.dir/Parser/MathParser.cpp.obj: CXX_COMPILER__MathParser_Debug D$:/Projects/MathParser/Parser/MathParser.cpp || cmake_object_order_depends_target_MathParser
+  DEP_FILE = CMakeFiles\MathParser.dir\Parser\MathParser.cpp.obj.d
   FLAGS = -g -std=gnu++2a
   OBJECT_DIR = CMakeFiles\MathParser.dir
-  OBJECT_FILE_DIR = CMakeFiles\MathParser.dir
+  OBJECT_FILE_DIR = CMakeFiles\MathParser.dir\Parser
 
 
 # =============================================================================
@@ -63,7 +63,7 @@ build CMakeFiles/MathParser.dir/MathParser.cpp.obj: CXX_COMPILER__MathParser_Deb
 #############################################
 # Link the static library libMathParser.a
 
-build libMathParser.a: CXX_STATIC_LIBRARY_LINKER__MathParser_Debug CMakeFiles/MathParser.dir/MathParser.cpp.obj
+build libMathParser.a: CXX_STATIC_LIBRARY_LINKER__MathParser_Debug CMakeFiles/MathParser.dir/Parser/MathParser.cpp.obj
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles\MathParser.dir
   POST_BUILD = cd .
