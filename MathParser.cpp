@@ -89,6 +89,10 @@ void MathExpression::BuildPostfixNotation() {
                 throw runtime_error("Ошибка. Такой операции нет");
 
             case comma:
+                while (tokens.top().type != openBracket) {
+                    postfixNotationExpression.push_back(tokens.top());
+                    tokens.pop();
+                }
             case number:
                 postfixNotationExpression.push_back(token);
                 break;

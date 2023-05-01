@@ -41,7 +41,7 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = D$:/Projects/MathParser/cmake-build-debug/
 # =============================================================================
-# Object build statements for STATIC_LIBRARY target MathParser
+# Object build statements for EXECUTABLE target MathParser
 
 
 #############################################
@@ -49,27 +49,29 @@ cmake_ninja_workdir = D$:/Projects/MathParser/cmake-build-debug/
 
 build cmake_object_order_depends_target_MathParser: phony || CMakeFiles/MathParser.dir
 
-build CMakeFiles/MathParser.dir/MathParser.cpp.obj: CXX_COMPILER__MathParser_Debug D$:/Projects/MathParser/MathParser.cpp || cmake_object_order_depends_target_MathParser
-  DEP_FILE = CMakeFiles\MathParser.dir\MathParser.cpp.obj.d
+build CMakeFiles/MathParser.dir/main.cpp.obj: CXX_COMPILER__MathParser_Debug D$:/Projects/MathParser/main.cpp || cmake_object_order_depends_target_MathParser
+  DEP_FILE = CMakeFiles\MathParser.dir\main.cpp.obj.d
   FLAGS = -g -std=gnu++2a
   OBJECT_DIR = CMakeFiles\MathParser.dir
   OBJECT_FILE_DIR = CMakeFiles\MathParser.dir
 
 
 # =============================================================================
-# Link build statements for STATIC_LIBRARY target MathParser
+# Link build statements for EXECUTABLE target MathParser
 
 
 #############################################
-# Link the static library libMathParser.a
+# Link the executable MathParser.exe
 
-build libMathParser.a: CXX_STATIC_LIBRARY_LINKER__MathParser_Debug CMakeFiles/MathParser.dir/MathParser.cpp.obj
-  LANGUAGE_COMPILE_FLAGS = -g
+build MathParser.exe: CXX_EXECUTABLE_LINKER__MathParser_Debug CMakeFiles/MathParser.dir/main.cpp.obj
+  FLAGS = -g
+  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\MathParser.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_FILE = libMathParser.a
-  TARGET_PDB = MathParser.a.dbg
+  TARGET_FILE = MathParser.exe
+  TARGET_IMPLIB = libMathParser.dll.a
+  TARGET_PDB = MathParser.exe.dbg
 
 
 #############################################
@@ -97,7 +99,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build MathParser: phony libMathParser.a
+build MathParser: phony MathParser.exe
 
 # =============================================================================
 # Folder targets.
@@ -107,7 +109,7 @@ build MathParser: phony libMathParser.a
 #############################################
 # Folder: D:/Projects/MathParser/cmake-build-debug
 
-build all: phony libMathParser.a
+build all: phony MathParser.exe
 
 # =============================================================================
 # Built-in targets

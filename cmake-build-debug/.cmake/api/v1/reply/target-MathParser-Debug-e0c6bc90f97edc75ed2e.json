@@ -1,9 +1,11 @@
 {
-	"archive" : {},
 	"artifacts" : 
 	[
 		{
-			"path" : "libMathParser.a"
+			"path" : "MathParser.exe"
+		},
+		{
+			"path" : "MathParser.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -11,7 +13,7 @@
 	{
 		"commands" : 
 		[
-			"add_library"
+			"add_executable"
 		],
 		"files" : 
 		[
@@ -58,8 +60,27 @@
 		}
 	],
 	"id" : "MathParser::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
 	"name" : "MathParser",
-	"nameOnDisk" : "libMathParser.a",
+	"nameOnDisk" : "MathParser.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -73,6 +94,15 @@
 			[
 				0
 			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				1,
+				2,
+				3
+			]
 		}
 	],
 	"sources" : 
@@ -80,9 +110,24 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "MathParser.cpp",
+			"path" : "main.cpp",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "MathParser.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Operations.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Fraction.hpp",
+			"sourceGroupIndex" : 1
 		}
 	],
-	"type" : "STATIC_LIBRARY"
+	"type" : "EXECUTABLE"
 }

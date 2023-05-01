@@ -3,6 +3,7 @@
 #include <string>
 #include <cmath>
 #include <limits>
+#include <stdexcept>
 
 using namespace std;
 
