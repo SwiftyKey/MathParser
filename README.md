@@ -13,6 +13,6 @@
 * Работа с обыкновенными дробями
 * Сообщение об ошибках
 
-> Сама библиотека находится в [cmake-build-debug](https://github.com/SwiftyKey/MathParser/tree/master/cmake-build-debug). Файл libMathParser.a
+> Сама библиотека [libmathparser.a](https://github.com/SwiftyKey/MathParser/blob/master/libmathparser.a)
 
-> Пример использования [MathParserTest](https://github.com/SwiftyKey/MathParserTest)
+> Пример использования [main.cpp](https://github.com/SwiftyKey/MathParser/blob/master/main.cpp)
