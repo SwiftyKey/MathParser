@@ -105,6 +105,9 @@ void tests() {
     test("min(1, 2)", 1);
     test("min(1, 2) * 10 - 5 / 3", 8.33333);
     test("min(min(1, 2, 3), min(3, 5, 8 * 20 - 5 ^ 3)) * 10 - 5 / 3", 8.33333);
+    test("min(1, 0, -3, 1221313)", -3);
+    test("min(-1, -2 + 2, -3)", -3);
+    test("min(-1+3432, -2+2, -131)", -131);
     test("0.8845875131313131", 0.8845875131313131);
     test("0.8845875131313131 * 0.284881", 0.252002);
     test("0.999999999 + 0.999999999", 1.999999998);
@@ -149,7 +152,7 @@ void input() {
             Fraction result = expression.Eval();
             cout << "Ответ: " << (long double) result << endl;
         } catch (exception &e) {
-            cerr << e.what() << endl;
+            cout << e.what() << endl;
         }
     }
 }
