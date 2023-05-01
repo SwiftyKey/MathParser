@@ -124,6 +124,7 @@ void tests() {
     test(",", 1);
     test("min", 1);
     test("б + 3", 1);
+    test("б", 1);
     test("3+", 1);
     test("+", 1);
     test("(-8)^(-1/2)", -1);
