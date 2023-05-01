@@ -1,0 +1,7 @@
+g++ -c Fraction.cpp -o fraction.o
+ar cr libfraction.a fraction.o
+g++ -c Operations.cpp -o operations.o
+ar cr liboperations.a operations.o
+g++ -c MathParser.cpp -o mathparser.o
+ar cr libmathparser.a mathparser.o
+g++ main.cpp -L. -lmathparser -loperations -lfraction
