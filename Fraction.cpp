@@ -194,43 +194,26 @@ Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
     Fraction result;
 
     bool isBaseNegative = false;
-    long long baseNumerator = a.GetNumerator();
-    long long baseDenominator = a.GetDenominator();
+    long double base = a.ConvertFractionToDouble();
 
     // если основание степени отрицательное
-    if (baseNumerator < 0) {
+    if (base < 0) {
         isBaseNegative = true;
-        baseNumerator = abs(baseNumerator);
+        base = abs(base);
     }
 
-    bool isExponentNegative = false;
     long long exponentNumerator = b.GetNumerator();
     long long exponentDenominator = b.GetDenominator();
-
-    // если показатель степени отрицательный
-    if (exponentNumerator < 0) {
-        isExponentNegative = true;
-        exponentNumerator = abs(exponentNumerator);
-    }
 
     if (isBaseNegative && !IsEven(exponentNumerator) && IsEven(exponentDenominator))
         throw runtime_error("Ошибка вычисления. Извлечение четного корня из отрицательного числа");
 
     // возводим числитель основания степени в дробную степень, где числитель - возведение степени, а знаменатель - извлечение корня
-    Fraction firstFraction(pow(pow(baseNumerator, exponentNumerator), 1 / (long double) exponentDenominator));
-    // возводим знаменатель основания степени в дробную степень, где числитель - возведение степени, а знаменатель - извлечение корня
-    Fraction secondFraction(pow(pow(baseDenominator, exponentNumerator), 1 / (long double) exponentDenominator));
+    result.ConvertDoubleToFraction(pow(pow(base, 1 / (long double) exponentDenominator), exponentNumerator));
 
-    // Так как получившиеся числитель и знаменатель могут быть нецелыми, делим получившиеся дроби
-    result = firstFraction / secondFraction;
 
     // Если основание степени отрицательное и оно возводится в нечетную степень, то сохраняем минус
     if (isBaseNegative && !IsEven(exponentNumerator)) result.SetNumerator(-result.GetNumerator());
-
-    // Если показатель степени отрицательный, то переворачиваем получившуюся дробь
-    if (isExponentNegative) result.TurnOver();
-
-    result.ConvertDoubleToFraction((long double) result);
 
     return result;
 }

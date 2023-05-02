@@ -85,7 +85,7 @@ void MathExpression::BuildPostfixNotation() {
 
         switch (token.type) {
             case unknown:
-                if (index == expression.size()) break;
+                if (index == expression.size() && token.name.empty()) break;
                 throw runtime_error("Ошибка. Такой операции нет");
 
             case comma:
@@ -170,6 +170,8 @@ Fraction MathExpression::Eval() {
                 break;
 
             case binaryOperation:
+                if (numbers.empty()) throw runtime_error("Ошибка вычисления. Пропущен операнд");
+
                 b = numbers.top();
                 numbers.pop();
 
@@ -200,6 +202,8 @@ Fraction MathExpression::Eval() {
     }
 
     if (numbers.size() > 1) throw runtime_error("Ошибка вычисления. Пропущен оператор или функция");
+
+    if (numbers.empty()) throw runtime_error("Ошибка вычисления. Лишний операнд");
 
     return numbers.top();
 }
