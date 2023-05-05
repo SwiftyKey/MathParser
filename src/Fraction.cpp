@@ -1,4 +1,4 @@
-#include "Fraction.hpp"
+#include "../include/Fraction.hpp"
 
 long long Fraction::GCD(long long a, long long b) {
     while (b) {

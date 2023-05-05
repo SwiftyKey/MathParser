@@ -1,7 +1,5 @@
-g++ -c Fraction.cpp -o fraction.o
-g++ -c Operations.cpp -o operations.o
-g++ -c MathParser.cpp -o mathparser.o
-ar cr libmathparser.a mathparser.o operations.o fraction.o
-g++ main.cpp -L. -lmathparser
-
-15/(7-(1+1))*3-(2+(1+1))*15/(7-(200+1))*3-(2+(1+1))*(15/(7-(1+1))*3-(2+(1+1))+15/(7-(1+1))*3-(2+(1+1)))
+g++ -c ./src/Fraction.cpp -o ./lib/fraction.o
+g++ -c ./src/Operations.cpp -o ./lib/operations.o
+g++ -c ./src/MathParser.cpp -o ./lib/mathparser.o
+ar rcs ./lib/libmathparser.a ./lib/mathparser.o ./lib/operations.o ./lib/fraction.o
+ar rcs ./lib/libmathparser.lib ./lib/mathparser.o ./lib/operations.o ./lib/fraction.o

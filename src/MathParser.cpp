@@ -1,4 +1,4 @@
-#include "MathParser.hpp"
+#include "../include/MathParser.hpp"
 
 bool MathExpression::IsDigit(const size_t &position) { return isdigit(expression[position]); }
 
@@ -84,6 +84,7 @@ void MathExpression::BuildPostfixNotation() {
         Token token = GetToken();
 
         switch (token.type) {
+            // если дошли до конца строки и токен пустой, то прерываем цикл
             case unknown:
                 if (index == expression.size() && token.name.empty()) break;
                 throw runtime_error("Ошибка. Такой операции нет");
