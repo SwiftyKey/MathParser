@@ -13,6 +13,6 @@
 * Работа с обыкновенными дробями
 * Сообщение об ошибках
 
-> Сама библиотека [libmathparser.a](https://github.com/SwiftyKey/MathParser/blob/master/lib/libmathparser.a)
+> Сама библиотека [libmathparser.lib](https://github.com/SwiftyKey/MathParser/blob/master/lib/libmathparser.a)
 
 > Пример использования [main.cpp](https://github.com/SwiftyKey/MathParser/blob/master/main.cpp)
