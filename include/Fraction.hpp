@@ -56,7 +56,7 @@ public:
     explicit Fraction(const long double &number);
 
     /**
-     * Конструктор с числовым аргументом класса Fraction
+     * Конструктор со строковым аргументом класса Fraction
      */
     explicit Fraction(const string &str);
 
@@ -95,18 +95,6 @@ public:
      * ConvertFractionToDouble - переводит обыкновенную дробь в десятичную
      */
     long double ConvertFractionToDouble() const;
-
-    /**
-     * Функция-член класса Fraction
-     * ConvertDoubleToFraction - переводит дробное число в обыкновенную дробь
-     */
-    void ConvertDoubleToFraction(const long double &number);
-
-    /**
-     * Функция-член класса Fraction
-     * ConvertStringToFraction - переводит дробное число записанное в строке в обыкновенную дробь
-     */
-    void ConvertStringToFraction(const string &str);
 
     /**
      * Перегрузка операторов

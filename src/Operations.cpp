@@ -33,8 +33,6 @@ void Operations::AddFunction(const string &name, const function<Fraction(const v
     numberOfFunctionArguments[name] = numberOfArguments;
 }
 
-int Operations::GetNumberOfFunctionArguments(const string &name) { return numberOfFunctionArguments[name]; }
-
 bool Operations::IsBinaryOperation(const string &name) {
     return (binaryOperations.find(name) != binaryOperations.end());
 }

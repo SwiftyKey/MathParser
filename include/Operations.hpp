@@ -185,8 +185,6 @@ public:
     void AddFunction(const string &name, const function<Fraction(const vector<Fraction> &)> &func, int priority = 3,
                      int numberOfArguments = 0);
 
-    int GetNumberOfFunctionArguments(const string &name);
-
     /**
      * Функция-член класса Operations
      * IsBinaryOperation - проверяет, является ли операция бинарной

@@ -190,7 +190,7 @@ Fraction MathExpression::Eval() {
                 args.push_back(numbers.top());
                 numbers.pop();
 
-                int numberOfArguments = operations.GetNumberOfFunctionArguments(iter.name);
+                int numberOfArguments = operations.numberOfFunctionArguments[iter.name];
 
                 if (numberOfArguments != 0 && args.size() > numberOfArguments)
                     throw runtime_error("Ошибка вычисления. Функция " + iter.name +

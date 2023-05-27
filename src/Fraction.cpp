@@ -13,31 +13,7 @@ Fraction::Fraction() {
     denominator = 1;
 }
 
-Fraction::Fraction(const long double &number) { ConvertDoubleToFraction(number); }
-
-Fraction::Fraction(const string &str) { ConvertStringToFraction(str); }
-
-
-long long Fraction::GetNumerator() const { return numerator; }
-
-long long Fraction::GetDenominator() const { return denominator; }
-
-void Fraction::SetNumerator(const long long &number) {
-    numerator = number;
-}
-
-void Fraction::SetDenominator(const long long &number) {
-    denominator = number;
-}
-
-void Fraction::TurnOver() {
-    // Для того чтобы получить перевернутую дробь, нужно поменять числитель и знаменатель местами
-    swap(numerator, denominator);
-}
-
-long double Fraction::ConvertFractionToDouble() const { return (long double) numerator / denominator; }
-
-void Fraction::ConvertDoubleToFraction(const long double &number) {
+Fraction::Fraction(const long double &number) {
     if (!isfinite(number)) throw runtime_error("Ошибка вычисления. Проверьте выражение");
 
     if (number > numeric_limits<long long>::max()) throw runtime_error("Ошибка. Слишком большое число");
@@ -57,7 +33,7 @@ void Fraction::ConvertDoubleToFraction(const long double &number) {
     numerator = roundedDecimal / gcd + integral * denominator;
 }
 
-void Fraction::ConvertStringToFraction(const string &str) {
+Fraction::Fraction(const string &str) {
     size_t index = str.find('.');
 
     try {
@@ -93,6 +69,26 @@ void Fraction::ConvertStringToFraction(const string &str) {
         throw runtime_error("Ошибка. Слишком большое число");
     }
 }
+
+
+long long Fraction::GetNumerator() const { return numerator; }
+
+long long Fraction::GetDenominator() const { return denominator; }
+
+void Fraction::SetNumerator(const long long &number) {
+    numerator = number;
+}
+
+void Fraction::SetDenominator(const long long &number) {
+    denominator = number;
+}
+
+void Fraction::TurnOver() {
+    // Для того чтобы получить перевернутую дробь, нужно поменять числитель и знаменатель местами
+    swap(numerator, denominator);
+}
+
+long double Fraction::ConvertFractionToDouble() const { return (long double) numerator / denominator; }
 
 Fraction::operator long double() const { return ConvertFractionToDouble(); }
 
@@ -191,8 +187,6 @@ bool Fraction::operator!=(const Fraction &fraction) const {
 }
 
 Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
-    Fraction result;
-
     bool isBaseNegative = false;
     long double base = a.ConvertFractionToDouble();
 
@@ -209,7 +203,7 @@ Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
         throw runtime_error("Ошибка вычисления. Извлечение четного корня из отрицательного числа");
 
     // возводим числитель основания степени в дробную степень, где числитель - возведение степени, а знаменатель - извлечение корня
-    result.ConvertDoubleToFraction(pow(pow(base, 1 / (long double) exponentDenominator), exponentNumerator));
+    Fraction result(pow(pow(base, 1 / (long double) exponentDenominator), exponentNumerator));
 
 
     // Если основание степени отрицательное и оно возводится в нечетную степень, то сохраняем минус
