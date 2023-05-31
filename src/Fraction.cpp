@@ -14,15 +14,20 @@ Fraction::Fraction() {
 }
 
 Fraction::Fraction(const long double &number) {
-    if (!isfinite(number)) throw runtime_error("Ошибка вычисления. Проверьте выражение");
+    // Если number равно nan или inf
+    if (!isfinite(number))
+        throw runtime_error("Ошибка вычисления. Проверьте выражение");
 
-    if (number > numeric_limits<long long>::max()) throw runtime_error("Ошибка. Слишком большое число");
+    // Если number превышает максимум типа long long
+    if (number > numeric_limits<long long>::max())
+        throw runtime_error("Ошибка. Слишком большое число");
 
-    auto integral = (long long) number; // целая часть числа
+    long long integral = (long long) number; // целая часть числа
     long double decimal = number - integral; // дробная часть числа
 
-    // Округляем дробную часть числа до точности precision, также изначально является числителем без учета целой части
-    auto roundedDecimal = (long long) round(decimal * precision);
+    // Округляем дробную часть числа до точности precision
+    // Изначально является числителем без учета целой части
+    long long roundedDecimal = (long long) round(decimal * precision);
 
     // Находим наибольший общий делитель числителя и знаменателя
     long long gcd = GCD(roundedDecimal, precision);
@@ -35,7 +40,6 @@ Fraction::Fraction(const long double &number) {
 
 Fraction::Fraction(const string &str) {
     size_t index = str.find('.');
-
     try {
         // Если точка есть
         if (index != string::npos) {
@@ -43,7 +47,7 @@ Fraction::Fraction(const string &str) {
             string integral = str.substr(0, index);
             if (integral.empty()) integral = "0";
             // Получаем дробную часть числа (находится после точки)
-            string decimal = str.substr(index + 1, (short) log10(precision));
+            string decimal = str.substr(index + 1, log10(precision));
             if (decimal.empty()) decimal = "0";
             // Получаем числитель
             numerator = stoll(decimal);
@@ -65,7 +69,7 @@ Fraction::Fraction(const string &str) {
             numerator = stoll(str);
             denominator = 1;
         }
-    } catch (out_of_range& error) {
+    } catch (out_of_range &error) {
         throw runtime_error("Ошибка. Слишком большое число");
     }
 }
@@ -190,7 +194,7 @@ Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
     bool isBaseNegative = false;
     long double base = a.ConvertFractionToDouble();
 
-    // если основание степени отрицательное
+    // Если основание степени отрицательное
     if (base < 0) {
         isBaseNegative = true;
         base = abs(base);
@@ -202,7 +206,7 @@ Fraction Fraction::Power(const Fraction &a, const Fraction &b) {
     if (isBaseNegative && !IsEven(exponentNumerator) && IsEven(exponentDenominator))
         throw runtime_error("Ошибка вычисления. Извлечение четного корня из отрицательного числа");
 
-    // возводим числитель основания степени в дробную степень, где числитель - возведение степени, а знаменатель - извлечение корня
+    // Возводим основание в дробную степень, где числитель - возведение в степень, а знаменатель - извлечение корня
     Fraction result(pow(pow(base, 1 / (long double) exponentDenominator), exponentNumerator));
 
 

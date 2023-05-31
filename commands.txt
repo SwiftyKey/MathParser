@@ -2,4 +2,4 @@ g++ -c ./src/Fraction.cpp -o ./lib/fraction.o
 g++ -c ./src/Operations.cpp -o ./lib/operations.o
 g++ -c ./src/MathParser.cpp -o ./lib/mathparser.o
 ar rcs ./lib/libmathparser.a ./lib/mathparser.o ./lib/operations.o ./lib/fraction.o
-ar rcs ./lib/libmathparser.lib ./lib/mathparser.o ./lib/operations.o ./lib/fraction.o
+g++ main.cpp -L. ./lib/libmathparser.a

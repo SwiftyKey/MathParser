@@ -204,7 +204,7 @@ Fraction MathExpression::Eval() {
 
     if (numbers.size() > 1) throw runtime_error("Ошибка вычисления. Пропущен оператор или функция");
 
-    if (numbers.empty()) throw runtime_error("Ошибка вычисления. Лишний операнд");
+    if (numbers.empty()) throw runtime_error("Ошибка вычисления. Лишний оператор или функция");
 
     return numbers.top();
 }
